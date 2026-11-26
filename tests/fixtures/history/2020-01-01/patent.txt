@@ -1,0 +1,4 @@
+Appl_Type~Appl_No~Product_No~Patent_No~Patent_Expire_Date_Text~drug_substance_flag~drug_product_flag~Patent_Use_Code~Delist_Flag
+N~000007~001~9500001~Jun 1, 2024~Y~~~
+N~000001~001~9000001~Mar 1, 2031~Y~~~
+N~000003~001~6000001~Jan 1, 2021~Y~Y~~

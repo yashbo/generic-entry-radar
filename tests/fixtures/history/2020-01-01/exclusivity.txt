@@ -1,0 +1,1 @@
+Appl_Type~Appl_No~Product_No~Exclusivity_Code~Exclusivity_Date

@@ -1,0 +1,195 @@
+{
+  "n_rows": 2378,
+  "n_drugs": 929,
+  "positive_rate": 0.415,
+  "cv": {
+    "base_rate": {
+      "roc_auc": 0.5,
+      "avg_precision": 0.415,
+      "brier": 0.243
+    },
+    "logistic_regression": {
+      "roc_auc": 0.78,
+      "avg_precision": 0.689,
+      "brier": 0.188
+    },
+    "gradient_boosting": {
+      "roc_auc": 0.787,
+      "avg_precision": 0.696,
+      "brier": 0.193
+    },
+    "baseline_form_and_route": {
+      "roc_auc": 0.746,
+      "avg_precision": 0.606,
+      "brier": 0.196
+    },
+    "baseline_generic_elsewhere": {
+      "roc_auc": 0.47,
+      "avg_precision": 0.397,
+      "brier": 0.244
+    }
+  },
+  "temporal": {
+    "n_train": 1659,
+    "n_test": 161,
+    "logistic_regression": {
+      "roc_auc": 0.763,
+      "avg_precision": 0.58,
+      "brier": 0.163
+    },
+    "gradient_boosting": {
+      "roc_auc": 0.716,
+      "avg_precision": 0.494,
+      "brier": 0.188
+    },
+    "baseline_form_and_route": {
+      "roc_auc": 0.769,
+      "avg_precision": 0.52,
+      "brier": 0.193
+    },
+    "baseline_generic_elsewhere": {
+      "roc_auc": 0.44,
+      "avg_precision": 0.251,
+      "brier": 0.226
+    }
+  },
+  "importance": [
+    {
+      "feature": "form_group",
+      "auc_drop": 0.113,
+      "std": 0.0453
+    },
+    {
+      "feature": "route_group",
+      "auc_drop": 0.0811,
+      "std": 0.0227
+    },
+    {
+      "feature": "n_patents",
+      "auc_drop": 0.0555,
+      "std": 0.0151
+    },
+    {
+      "feature": "n_active_patents",
+      "auc_drop": 0.0264,
+      "std": 0.0152
+    },
+    {
+      "feature": "main_barrier",
+      "auc_drop": 0.0228,
+      "std": 0.0057
+    },
+    {
+      "feature": "has_nce",
+      "auc_drop": 0.0084,
+      "std": 0.0117
+    },
+    {
+      "feature": "n_brand_ndas_ingredient",
+      "auc_drop": 0.0054,
+      "std": 0.0036
+    },
+    {
+      "feature": "has_orphan",
+      "auc_drop": 0.0052,
+      "std": 0.0022
+    },
+    {
+      "feature": "n_strengths",
+      "auc_drop": 0.0045,
+      "std": 0.0048
+    },
+    {
+      "feature": "nda_age_years",
+      "auc_drop": 0.0036,
+      "std": 0.0042
+    },
+    {
+      "feature": "years_to_entry",
+      "auc_drop": 0.0031,
+      "std": 0.0106
+    },
+    {
+      "feature": "applicant_portfolio",
+      "auc_drop": 0.0005,
+      "std": 0.0014
+    },
+    {
+      "feature": "modified_release",
+      "auc_drop": 0.0001,
+      "std": 0.0021
+    },
+    {
+      "feature": "is_combo",
+      "auc_drop": 0.0,
+      "std": 0.0
+    },
+    {
+      "feature": "ingredient_generic_elsewhere",
+      "auc_drop": -0.001,
+      "std": 0.0034
+    },
+    {
+      "feature": "n_generic_makers_ingredient",
+      "auc_drop": -0.0012,
+      "std": 0.0024
+    },
+    {
+      "feature": "is_otc",
+      "auc_drop": -0.0133,
+      "std": 0.0051
+    }
+  ],
+  "calibration": [
+    {
+      "predicted": 0.045,
+      "actual": 0.05,
+      "n": 238
+    },
+    {
+      "predicted": 0.106,
+      "actual": 0.168,
+      "n": 238
+    },
+    {
+      "predicted": 0.169,
+      "actual": 0.189,
+      "n": 238
+    },
+    {
+      "predicted": 0.248,
+      "actual": 0.274,
+      "n": 237
+    },
+    {
+      "predicted": 0.352,
+      "actual": 0.349,
+      "n": 238
+    },
+    {
+      "predicted": 0.46,
+      "actual": 0.45,
+      "n": 238
+    },
+    {
+      "predicted": 0.553,
+      "actual": 0.549,
+      "n": 237
+    },
+    {
+      "predicted": 0.643,
+      "actual": 0.63,
+      "n": 238
+    },
+    {
+      "predicted": 0.731,
+      "actual": 0.685,
+      "n": 238
+    },
+    {
+      "predicted": 0.836,
+      "actual": 0.803,
+      "n": 238
+    }
+  ]
+}

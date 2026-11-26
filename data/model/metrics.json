@@ -1,0 +1,225 @@
+{
+  "n_rows": 2378,
+  "n_drugs": 929,
+  "positive_rate": 0.415,
+  "cv": {
+    "base_rate": {
+      "roc_auc": 0.5,
+      "avg_precision": 0.415,
+      "brier": 0.243
+    },
+    "logistic_regression": {
+      "roc_auc": 0.868,
+      "avg_precision": 0.826,
+      "brier": 0.145
+    },
+    "gradient_boosting": {
+      "roc_auc": 0.866,
+      "avg_precision": 0.824,
+      "brier": 0.151
+    },
+    "baseline_form_and_route": {
+      "roc_auc": 0.746,
+      "avg_precision": 0.606,
+      "brier": 0.196
+    },
+    "baseline_spend_only": {
+      "roc_auc": 0.7,
+      "avg_precision": 0.631,
+      "brier": 0.215
+    },
+    "baseline_generic_elsewhere": {
+      "roc_auc": 0.47,
+      "avg_precision": 0.397,
+      "brier": 0.244
+    }
+  },
+  "temporal": {
+    "n_train": 1659,
+    "n_test": 161,
+    "logistic_regression": {
+      "roc_auc": 0.801,
+      "avg_precision": 0.567,
+      "brier": 0.16
+    },
+    "gradient_boosting": {
+      "roc_auc": 0.784,
+      "avg_precision": 0.543,
+      "brier": 0.168
+    },
+    "baseline_form_and_route": {
+      "roc_auc": 0.769,
+      "avg_precision": 0.52,
+      "brier": 0.193
+    },
+    "baseline_spend_only": {
+      "roc_auc": 0.665,
+      "avg_precision": 0.409,
+      "brier": 0.184
+    },
+    "baseline_generic_elsewhere": {
+      "roc_auc": 0.44,
+      "avg_precision": 0.251,
+      "brier": 0.226
+    }
+  },
+  "importance": [
+    {
+      "feature": "route_group",
+      "auc_drop": 0.0728,
+      "std": 0.0258
+    },
+    {
+      "feature": "form_group",
+      "auc_drop": 0.0639,
+      "std": 0.0361
+    },
+    {
+      "feature": "main_barrier",
+      "auc_drop": 0.0518,
+      "std": 0.0078
+    },
+    {
+      "feature": "log_brand_spend",
+      "auc_drop": 0.0358,
+      "std": 0.0125
+    },
+    {
+      "feature": "n_patents",
+      "auc_drop": 0.0354,
+      "std": 0.0107
+    },
+    {
+      "feature": "n_active_patents",
+      "auc_drop": 0.0354,
+      "std": 0.0127
+    },
+    {
+      "feature": "piv_filed",
+      "auc_drop": 0.014,
+      "std": 0.0122
+    },
+    {
+      "feature": "has_orphan",
+      "auc_drop": 0.006,
+      "std": 0.0019
+    },
+    {
+      "feature": "years_to_entry",
+      "auc_drop": 0.0057,
+      "std": 0.01
+    },
+    {
+      "feature": "nda_age_years",
+      "auc_drop": 0.0027,
+      "std": 0.0015
+    },
+    {
+      "feature": "n_generic_makers_ingredient",
+      "auc_drop": 0.0025,
+      "std": 0.0027
+    },
+    {
+      "feature": "n_strengths",
+      "auc_drop": 0.002,
+      "std": 0.0014
+    },
+    {
+      "feature": "log_molecule_spend",
+      "auc_drop": 0.0019,
+      "std": 0.0039
+    },
+    {
+      "feature": "applicant_portfolio",
+      "auc_drop": 0.0017,
+      "std": 0.002
+    },
+    {
+      "feature": "ingredient_generic_elsewhere",
+      "auc_drop": 0.0014,
+      "std": 0.0023
+    },
+    {
+      "feature": "modified_release",
+      "auc_drop": 0.0007,
+      "std": 0.0009
+    },
+    {
+      "feature": "years_since_piv",
+      "auc_drop": 0.0004,
+      "std": 0.0005
+    },
+    {
+      "feature": "n_brand_ndas_ingredient",
+      "auc_drop": 0.0,
+      "std": 0.0027
+    },
+    {
+      "feature": "is_combo",
+      "auc_drop": 0.0,
+      "std": 0.0
+    },
+    {
+      "feature": "has_nce",
+      "auc_drop": -0.0011,
+      "std": 0.0039
+    },
+    {
+      "feature": "is_otc",
+      "auc_drop": -0.0053,
+      "std": 0.004
+    }
+  ],
+  "calibration": [
+    {
+      "predicted": 0.017,
+      "actual": 0.034,
+      "n": 238
+    },
+    {
+      "predicted": 0.053,
+      "actual": 0.055,
+      "n": 238
+    },
+    {
+      "predicted": 0.105,
+      "actual": 0.122,
+      "n": 238
+    },
+    {
+      "predicted": 0.179,
+      "actual": 0.215,
+      "n": 237
+    },
+    {
+      "predicted": 0.278,
+      "actual": 0.294,
+      "n": 238
+    },
+    {
+      "predicted": 0.391,
+      "actual": 0.399,
+      "n": 238
+    },
+    {
+      "predicted": 0.531,
+      "actual": 0.544,
+      "n": 237
+    },
+    {
+      "predicted": 0.722,
+      "actual": 0.676,
+      "n": 238
+    },
+    {
+      "predicted": 0.891,
+      "actual": 0.853,
+      "n": 238
+    },
+    {
+      "predicted": 0.957,
+      "actual": 0.954,
+      "n": 238
+    }
+  ]
+}

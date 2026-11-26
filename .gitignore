@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+
+# Large or re-downloadable raw data (see README for the fetch scripts).
+data/history/
+data/*.zip
+data/partd/*.zip
+data/partd/DSD_PTD_*.csv
+
+# Kept: data/orange_book/, data/partd/spend_long.csv, data/piv/, data/model/, data/backtest/

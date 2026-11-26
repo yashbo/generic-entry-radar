@@ -1,0 +1,8 @@
+.git
+__pycache__/
+*.pyc
+.venv/
+data/history/
+data/*.zip
+data/partd/*.zip
+data/partd/DSD_PTD_*.csv

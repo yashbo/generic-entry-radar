@@ -30,6 +30,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=8)
     ap.add_argument("--model", default=None, help="Override OLLAMA_MODEL")
+    ap.add_argument("--out", default=None, help="Results file (default data/explainer_eval.json)")
     args = ap.parse_args()
     if args.model:
         os.environ["OLLAMA_MODEL"] = args.model
@@ -92,9 +93,11 @@ def main() -> int:
                "no_type_errors": sum(not r["type_mismatches"] for r in results),
                "with_disclaimer": sum(r["disclaimer"] for r in results),
                "timeouts": sum(r["timed_out"] for r in results),
-               "median_seconds": float(pd.Series([r["seconds"] for r in results]).median())}
-    OUT.write_text(json.dumps({"summary": summary, "results": results}, indent=2))
-    print(f"\n{summary}\nSaved {OUT}")
+               "median_seconds": float(pd.Series([r["seconds"] for r in results]).median()),
+               "median_words": float(pd.Series([r["words"] for r in results]).median())}
+    out = Path(args.out) if args.out else OUT
+    out.write_text(json.dumps({"summary": summary, "results": results}, indent=2))
+    print(f"\n{summary}\nSaved {out}")
     return 0
 
 

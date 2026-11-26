@@ -89,9 +89,9 @@ The model answers the question the backtest raised: **will a generic come at all
 ## LLM explainer and its fact check
 Small local models misread raw JSON: in early tests llama3.2:3b put the carve-out date in the bottom line and relabelled method-of-use patents as formulation patents. So the design is **code analyses, model writes**:
 
-1. `explain.build_brief` turns a drug's facts into short labelled sentences, with dates already computed and patents already grouped by type.
+1. `explain.build_brief` turns a drug's facts into short labelled sentences, with dates already computed and patents already grouped by type. Pediatric extensions (`*PED`) carry no type flags in the Orange Book, so each is folded into the patent it extends rather than listed as an "other" patent.
 2. The model rewrites that brief for a business reader (`explain.py`, local Ollama).
-3. `grounding.py` checks the answer: no patent number, exclusivity code, date or year that isn't in the brief; the bottom-line date is the true entry date; no patent number sits under the wrong type.
+3. `grounding.py` checks the answer: no patent number, exclusivity code, date, year or percentage that isn't in the brief; the bottom-line date is the true entry date; no patent number sits under the wrong type.
 4. In the app, a failed check gets one retry. A second failure shows the verified brief instead, and the disclaimer is always added in code.
 
 Generation is capped at 450 tokens and 90 seconds. Without a cap, the model once fell into a repetition loop that Ollama never stopped.
@@ -99,7 +99,28 @@ Generation is capped at 450 tokens and 90 seconds. Without a cap, the model once
 ```powershell
 python generic_entry_radar/eval_explainer.py --n 12
 ```
-**Latest run (llama3.2:3b on a 4 GB RTX 3050):** 12/12 answers passed every check (12/12 grounded, 12/12 correct bottom line, 0 type errors, 0 timeouts), with a median of 14 seconds per answer. The results are in `data/explainer_eval.json`.
+**Latest runs (same 12 drugs, 4 GB RTX 3050 laptop GPU):**
+
+| Model | Passed every check | Median time | Runs on |
+|---|---|---|---|
+| llama3.2:3b (default) | 10 / 12 | 13 s | GPU |
+| llama3.1:8b | 12 / 12 | 26 s | 58% CPU, 42% GPU |
+
+Results are in `data/explainer_eval.json` and `data/explainer_eval_llama3.1-8b.json` (`--model` and `--out` pick the model and file). Both 3B failures are invented codes ("EX-001", "NDA-198"), which the check catches, so the app retries or shows the brief. The 8B model is more faithful and writes slightly clearer prose, but it is 2–3.5× slower on this hardware, so 3B stays the default.
+
+The model comparison also improved the pipeline. On the first 8B run, a muddled brief led it to a wrong AirDuo date: pediatric extensions were listed as "other" patents, so the brief's last-barrier date did not match any patent group. The checker also wrongly rejected two correct dates, "May 2037" and "May 10th, 2031". All three are fixed, with tests. A manual read of the first batch of stored answers then found codes the model had made up ("EX-485", "U-203") in 54 of 290: the check only knew real Orange Book code formats. It now flags any code-shaped token not in the brief.
+
+### AI answers on the hosted app
+The hosted app has no LLM, so the AI answers for about 300 drugs are written in advance on a laptop:
+
+```powershell
+python generic_entry_radar/explanations.py --limit 300
+```
+
+- **Which drugs:** protected drugs whose listed protection ends within 5 years, then drugs where a carve-out is possible now, then the biggest Medicare Part D spend, then Paragraph IV challenges.
+- **Same pipeline as the Explain button:** write, fact-check, one retry. Only answers that pass are kept in `data/explanations.json`, together with the brief each was checked against.
+- **Latest batch:** 272 of 300 drugs have a stored answer; the other 28 failed the check twice and show the brief.
+- **Checked again at display time:** the app reruns the fact check against today's data and also requires the drug's status to be unchanged. A stored answer whose dates, numbers or status have gone stale is not shown; the verified brief appears instead.
 
 ## Tests
 ```powershell
@@ -108,6 +129,7 @@ python generic_entry_radar/tests/test_backtest.py
 python generic_entry_radar/tests/test_attractiveness.py
 python generic_entry_radar/tests/test_piv.py
 python generic_entry_radar/tests/test_grounding.py
+python generic_entry_radar/tests/test_explanations.py
 ```
 
 ## Files
@@ -121,6 +143,8 @@ python generic_entry_radar/tests/test_grounding.py
 - `fetch_partd.py`, `partd.py`: Medicare Part D spending and its matching to Orange Book drugs
 - `piv.py`: Paragraph IV list parsing and point-in-time challenge features
 - `grounding.py`, `eval_explainer.py`: fact checks for LLM answers and the evaluation script
+- `radar.py`: assembles the scored table and each drug's full facts (shared by the app and batch scripts)
+- `explanations.py`: writes and stores fact-checked AI answers for the hosted app, and re-checks them at display time
 
 ## Next ideas
 - **Broader sales data.** Medicaid State Drug Utilization Data (data.medicaid.gov) would cover a second payer.

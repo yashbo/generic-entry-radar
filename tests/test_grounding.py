@@ -32,6 +32,18 @@ def test_brief_skips_delisted_patents():
     assert "7000003" not in explain.build_brief(facts)
 
 
+def test_pediatric_extension_takes_its_base_patent_type():
+    # Real Orange Book *PED rows have no substance/product flags; they extend the base patent.
+    facts = {**FACTS, "patents": [
+        {"patent_no": "8000001", "expires": "2040-07-06", "product": True},
+        {"patent_no": "8000001*PED", "expires": "2041-01-06"},
+    ]}
+    brief = explain.build_brief(facts)
+    assert "Other patents" not in brief
+    assert ("Formulation patents: 1 listed, the latest expiring 2041-01-06 (8000001) "
+            "(dates include 6-month pediatric extensions)") in brief
+
+
 def test_good_explanation_passes():
     text = ("**Bottom line:** Generic entry is expected on 2033-08-15.\n"
             "* Method-of-use patents (9000002) run to 2033-08-15.\n"
@@ -55,9 +67,22 @@ def test_invented_patent_and_wrong_type_fail():
     assert r["type_mismatches"] and "9000002" in r["type_mismatches"][0]
 
 
+def test_invented_code_formats_are_caught():
+    text = "* Exclusivity code EX-485 and use code U-203 apply."
+    assert grounding.unsupported(text, BRIEF, TODAY)["exclusivity_codes"] == ["EX-485", "U-203"]
+
+
+def test_percentages_must_match_the_brief():
+    brief = BRIEF + "\nStatistical model: 62% chance a generic is approved within 2 years of protection ending."
+    assert grounding.unsupported("The model gives a 62 percent chance.", brief, TODAY)["percentages"] == []
+    assert grounding.unsupported("The model gives a 61 % chance.", brief, TODAY)["percentages"] == ["61%"]
+
+
 def test_month_name_dates_are_understood():
     text = "**Bottom line:** Generic entry is expected on August 15, 2033."
     assert grounding.bottom_line_ok(text, FACTS) is True
+    assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected on August 15th, 2033.", FACTS) is True
+    assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected on March 1st, 2031.", FACTS) is False
 
 
 def test_month_and_year_only_bottom_line():

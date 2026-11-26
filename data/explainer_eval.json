@@ -2,47 +2,52 @@
   "summary": {
     "model": "llama3.2:3b",
     "n": 12,
-    "passed_all_checks": 12,
-    "no_unsupported_items": 12,
+    "passed_all_checks": 10,
+    "no_unsupported_items": 10,
     "bottom_line_correct": 12,
     "no_type_errors": 12,
     "with_disclaimer": 12,
     "timeouts": 0,
-    "median_seconds": 14.25
+    "median_seconds": 12.9,
+    "median_words": 81.5
   },
   "results": [
     {
       "appl_no": "202813",
       "drug": "QNASL",
       "status": "Protected",
-      "seconds": 6.9,
-      "words": 58,
+      "seconds": 4.5,
+      "words": 36,
       "unsupported": {
         "patents": [],
-        "exclusivity_codes": [],
+        "exclusivity_codes": [
+          "EX-001"
+        ],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
-      "n_unsupported": 0,
+      "n_unsupported": 1,
       "bottom_line_ok": true,
       "type_mismatches": [],
-      "pass": true,
+      "pass": false,
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: QNASL (BECLOMETHASONE DIPROPIONATE, AEROSOL, METERED;NASAL), made by TEVA BRANDED PHARMACEUTICAL PRODUCTS R AND D LLC.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2031-10-21 (last barrier: Formulation patent).\nFormulation patents: 1 listed, the latest expiring 2031-10-21 (10188811); these cover the product's formulation; a generic can sometimes use a different formulation.\nCarve-out view: carving out uses does not bring entry earlier than 2031-10-21.",
-      "text": "**Bottom line:** The earliest generic entry for QNASL will be on October 21, 2031.\n\n**Barriers:**\n* Formulation patent: \u2022 10188811\n* Exclusivity: \n    * Exclusivity code: TEVA-BP-0003\n    * Exclusivity type: Exclusive\n\n**Carve-out view:** Carving out uses does not bring entry earlier than October 21, 2031.\n\n**Watch for:** None\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for QNASL is expected to be on October 21, 2031.\n\n**Barriers:**\n* \u2022 Patent 10188811\n\u2022 Exclusivity EX-001 (US)\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "214520",
       "drug": "DEFENCATH",
       "status": "Protected",
-      "seconds": 7.4,
-      "words": 47,
+      "seconds": 10.7,
+      "words": 67,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -51,19 +56,20 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: DEFENCATH (HEPARIN SODIUM; TAUROLIDINE, SOLUTION;N/A), made by CORMEDIX INC.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2042-04-15 (last barrier: Compound patent).\nCompound patents: 2 listed, the latest expiring 2042-04-15 (11738120, 7696182); these cover the active molecule itself; the hardest barrier to design around.\nExclusivity NCE (New chemical entity (5 years)) runs until 2028-11-15.\nExclusivity GAIN (Qualified infectious disease product (+5 years)) runs until 2033-11-15.\nCarve-out view: carving out uses does not bring entry earlier than 2042-04-15.",
-      "text": "**Bottom line:** The earliest generic entry for DEFENCATH will be on April 15, 2042.\n\n**Barriers:**\n* Compound patent: \u2022 11738120\n* Exclusivity NCE: runs until November 15, 2028.\n* Exclusivity GAIN: runs until November 15, 2033.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for DEFENCATH will be on April 15, 2042.\n\n**Barriers:**\n* Compound patent: \u2022 11738120\n* Exclusivity NCE: \u2022 2028-11-15\n* Exclusivity GAIN: \u2022 2033-11-15\n\n**Carve-out view:** Carving out uses does not bring entry earlier than April 15, 2042.\n\n**Watch for:** There is no challenge or market line in the brief.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "219208",
       "drug": "VANRAFIA",
       "status": "Protected",
-      "seconds": 9.3,
-      "words": 47,
+      "seconds": 11.4,
+      "words": 78,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -72,19 +78,20 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: VANRAFIA (ATRASENTAN HYDROCHLORIDE, TABLET;ORAL), made by NOVARTIS PHARMACEUTICALS CORP.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2043-03-25 (last barrier: Method-of-use patent).\nMethod-of-use patents: 8 listed, the latest expiring 2043-03-25 (12582631, 12521369, 11491137 and others); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nFormulation patents: 2 listed, the latest expiring 2034-07-07 (10016393, 9364458); these cover the product's formulation; a generic can sometimes use a different formulation.\nExclusivity NCE (New chemical entity (5 years)) runs until 2030-04-02.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2034-07-07.",
-      "text": "**Bottom line:** The earliest generic entry for VANRAFIA is expected to be around 2043-03-25.\n\n**Barriers:**\n* Method-of-use patent: \u2022 12582631\n* Exclusivity NCE (New chemical entity): runs until 2030-04-02\n* Formulation patents: \n  * 10016393\n  * 9364458\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for VANRAFIA is expected to be around 2043-03-25.\n\n**Barriers:**\n* If method-of-use patent 12582631 expires.\n* If formulation patent 10016393 expires.\n \n**Carve-out view:** A generic can leave off the label specific uses covered by method-of-use patents, allowing for an earlier entry on 2034-07-07. \n\n**Watch for:** The product's indication-specific exclusivities will need to be addressed before a generic can enter the market.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "211710",
       "drug": "VITRAKVI",
       "status": "Protected",
-      "seconds": 15.2,
-      "words": 82,
+      "seconds": 7.7,
+      "words": 42,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -93,19 +100,20 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: VITRAKVI (LAROTRECTINIB SULFATE, SOLUTION;ORAL), made by BAYER HEALTHCARE PHARMACEUTICALS INC.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2037-05-16 (last barrier: Method-of-use patent).\nMethod-of-use patents: 12 listed, the latest expiring 2037-05-16 (11337967, 11974998, 11484535 and others); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nFormulation patents: 2 listed, the latest expiring 2037-04-04 (10668072, 10137127); these cover the product's formulation; a generic can sometimes use a different formulation.\nCompound patents: 4 listed, the latest expiring 2036-08-15 (10799505, 10172861, 8513263 and others); these cover the active molecule itself; the hardest barrier to design around.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2037-04-04.",
-      "text": "**Bottom line:** The earliest generic entry for VITRAKVI is expected to be in May 2037.\n\n**Barriers:**\n* \u2022 11337967\n* \u2022 11974998\n* \u2022 11484535\n\u2022 Exclusivity code: XA4YVX8R9B (Method-of-use patent)\n\u2022 Exclusivity code: XA4ZTUVW1C (Formulation patent)\n\n**Carve-out view:** A generic can leave method-of-use patents and indication-specific exclusivities off its label, potentially allowing entry as early as April 2037.\n\n**Watch for:** The compound patents pose the hardest barrier to design around.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for VITRAKVI is expected to be in May 2037.\n\n**Barriers:**\n* Method-of-use patent: \u2022 11337967\n* Formulation patent: \u2022 10668072\n* Compound patents: \n    \u2022 10799505\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "213591",
       "drug": "TABRECTA",
       "status": "Protected",
-      "seconds": 16.1,
+      "seconds": 13.6,
       "words": 89,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -114,19 +122,20 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: TABRECTA (CAPMATINIB HYDROCHLORIDE, TABLET;ORAL), made by NOVARTIS PHARMACEUTICAL CORP.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2035-07-22 (last barrier: Formulation patent).\nFormulation patents: 2 listed, the latest expiring 2035-07-22 (10596178, 12208101); these cover the product's formulation; a generic can sometimes use a different formulation.\nCompound patents: 3 listed, the latest expiring 2032-11-19 (7767675, 8420645, 8461330); these cover the active molecule itself; the hardest barrier to design around.\nMethod-of-use patents: 2 listed, the latest expiring 2029-05-20 (8901123, 12084449); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nExclusivity ODE-291 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2027-05-06.\nCarve-out view: carving out uses does not bring entry earlier than 2035-07-22.\nPatent challenge (Paragraph IV): generic makers are challenging the patents, so entry can come before the listed dates through court wins or settlements; first filed 2024-05-06; 1 challenger(s).",
-      "text": "**Bottom line:** The earliest generic entry for TABRECTA is expected to be on July 22, 2035.\n\n**Barriers:**\n* Formulation patent: \u2022 10596178\n* Compound patent: \u2022 8461330\n* Method-of-use patent: \u2022 8901123\n* Exclusivity ODE-291 (Orphan drug exclusivity): runs until May 6, 2027\n\n**Carve-out view:** Carving out uses does not bring entry earlier than July 22, 2035.\n\n**Watch for:** The challenge to the patents is ongoing, with one challenger filing a Paragraph IV challenge on May 6, 2024.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for TABRECTA is expected to be on July 22, 2035.\n\n**Barriers:**\n* Formulation patent: \u2022 10596178\n* Compound patent: \u2022 8461330\n* Method-of-use patent: \u2022 8901123\n* Exclusivity ODE-291 (Orphan drug exclusivity): runs until May 6, 2027\n\n**Carve-out view:** Carving out uses does not bring entry earlier than July 22, 2035.\n\n**Watch for:** The generic makers are challenging the patents through Paragraph IV challenges, which could potentially shorten the time to market.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "210365",
       "drug": "EPIDIOLEX",
       "status": "Protected",
-      "seconds": 19.0,
-      "words": 114,
+      "seconds": 19.1,
+      "words": 127,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -135,19 +144,20 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: EPIDIOLEX (CANNABIDIOL, SOLUTION;ORAL), made by JAZZ PHARMACEUTICALS RESEARCH UK LTD.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2042-09-24 (last barrier: Method-of-use patent).\nMethod-of-use patents: 27 listed, the latest expiring 2042-09-24 (12661365, 11406623, 12102619 and others); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nCompound patents: 3 listed, the latest expiring 2039-04-26 (11865102, 11207292, 11096905); these cover the active molecule itself; the hardest barrier to design around.\nFormulation patents: 3 listed, the latest expiring 2035-06-17 (11633369, 10709673, 10966939); these cover the product's formulation; a generic can sometimes use a different formulation.\nExclusivity M-270 (Miscellaneous exclusivity) runs until 2026-10-20.\nExclusivity ODE-326 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2027-07-31.\nExclusivity ODE-332 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2027-07-31.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2039-04-26.\nPatent challenge (Paragraph IV): generic makers are challenging the patents, so entry can come before the listed dates through court wins or settlements; first filed 2022-09-28; 10 challenger(s).",
-      "text": "**Bottom line:** The earliest generic entry for EPIDIOLEX is expected to be on September 24, 2042.\n\n**Barriers:**\n* \u2022 12661365\n* \u2022 11406623\n* \u2022 12102619\n\u2022 Method-of-use patents cover specific uses that a generic can often leave off its label.\n\u2022 Exclusivity ODE-326 runs until July 31, 2027.\n\u2022 Exclusivity ODE-332 also runs until July 31, 2027.\n\n**Carve-out view:** If method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on April 26, 2039.\n\n**Watch for:** The patent challenge (Paragraph IV) filed in 2022 by multiple challengers may lead to earlier generic entry through court wins or settlements.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for EPIDIOLEX is expected to be on September 24, 2042.\n\n**Barriers:**\n* \u2022 Patent challenge (Paragraph IV): Generic makers are challenging the patents.\n* \u2022 Method-of-use patent: Specific uses covered by these patents will need to be left off the label.\n* \u2022 Compound patent: The active molecule itself is protected until April 26, 2039.\n* \u2022 Exclusivity ODE-326 and ODE-332 (Orphan drug exclusivity): These exclusivities run until July 31, 2027.\n\n**Carve-out view:** If method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on April 26, 2039.\n\n**Watch for:** The outcome of patent challenge (Paragraph IV) cases filed by generic makers since September 28, 2022.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "208159",
       "drug": "VISTOGARD",
       "status": "Carve-out possible now",
-      "seconds": 8.6,
-      "words": 40,
+      "seconds": 9.8,
+      "words": 55,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -156,40 +166,44 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: VISTOGARD (URIDINE TRIACETATE, GRANULE;ORAL), made by BTG INTERNATIONAL INC.\nStatus: Carve-out possible now.\nEarliest generic entry once every listed patent and exclusivity has expired: 2027-08-17 (last barrier: Method-of-use patent).\nMethod-of-use patents: 1 listed, the latest expiring 2027-08-17 (7776838); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nCarve-out view: compound and formulation protection has already expired, so a generic with the protected uses carved out of its label could be possible now.",
-      "text": "**Bottom line:** The earliest generic entry for Vistogard is expected to occur on 2027-08-17.\n\n**Barriers:**\n* \u2022 Patent 7776838\n\u2022 Exclusivity exclusivity code EXLUS15 \n\u2022 Exclusivity exclusivity code EXLUS16\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for Vistogard is expected to occur on 2027-08-17.\n\n**Barriers:**\n* \u2022 US7776838\n\u2022 Exclusivity: No exclusivity code listed.\n \n**Carve-out view:** A generic version of Vistogard could be possible now, as the compound and formulation protection has already expired.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "020866",
       "drug": "CYCLOSET",
       "status": "Generic approved, patents still listed",
-      "seconds": 15.7,
-      "words": 76,
+      "seconds": 14.9,
+      "words": 80,
       "unsupported": {
         "patents": [],
-        "exclusivity_codes": [],
+        "exclusivity_codes": [
+          "NDA-198"
+        ],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
-      "n_unsupported": 0,
+      "n_unsupported": 1,
       "bottom_line_ok": true,
       "type_mismatches": [],
-      "pass": true,
+      "pass": false,
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: CYCLOSET (BROMOCRIPTINE MESYLATE, TABLET;ORAL), made by VEROSCIENCE LLC.\nStatus: Generic approved, patents still listed.\nEarliest generic entry once every listed patent and exclusivity has expired: 2032-04-30 (last barrier: Formulation patent).\nGenerics are already FDA-approved (2 makers; first approval 1998-01-13).\nMethod-of-use patents: 7 listed, the latest expiring 2032-04-30 (10688094, 11000522, 11666567 and others); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nFormulation patents: 6 listed, the latest expiring 2032-04-30 (8431155, 8613947, 9192576 and others); these cover the product's formulation; a generic can sometimes use a different formulation.\nCarve-out view: carving out uses does not bring entry earlier than 2032-04-30.",
-      "text": "**Bottom line:** The earliest generic entry for CYCLOSET (BROMOCRIPTINE MESYLATE, TABLET;ORAL) will be on April 30, 2032.\n\n**Barriers:**\n* Formulation patent: \u2022 8431155\n* Method-of-use patents:\n\t+ 10688094\n\t+ 11000522\n\t+ 11666567\n* Exclusivity: \n    * United States: Exclusive for 25 years from the date of grant (patent number not specified)\n    * Canada: Exclusive for 20 years from the date of grant (patent number not specified)\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for CYCLOSET (BROMOCRIPTINE MESYLATE, TABLET;ORAL) will be on April 30, 2032.\n\n**Barriers:**\n* Formulation patent: \u2022 8431155\n* Method-of-use patents:\n\t+ 10688094\n\t+ 11000522\n\t+ 11666567\n* Exclusivity code: NDA-198 (expired)\n \n**Carve-out view:** Carving out uses does not bring entry earlier than April 30, 2032.\n\n**Watch for:** The challenge to generic entry is that the product's formulation may be different from the original.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "208799",
       "drug": "AIRDUO RESPICLICK",
       "status": "Generic approved, patents still listed",
-      "seconds": 14.1,
-      "words": 81,
+      "seconds": 14.0,
+      "words": 89,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -197,20 +211,21 @@
       "pass": true,
       "timed_out": false,
       "disclaimer": true,
-      "brief": "Drug: AIRDUO RESPICLICK (FLUTICASONE PROPIONATE; SALMETEROL XINAFOATE, POWDER;INHALATION), made by TEVA PHARMACEUTICAL INDUSTRIES LTD.\nStatus: Generic approved, patents still listed.\nEarliest generic entry once every listed patent and exclusivity has expired: 2041-01-06 (last barrier: Formulation patent).\nGenerics are already FDA-approved (5 makers; first approval 2019-01-30).\nOther patents: 7 listed, the latest expiring 2041-01-06 (11173259*PED, 11344685*PED, 11969544*PED and others).\nFormulation patents: 7 listed, the latest expiring 2040-07-06 (11173259, 11344685, 11969544 and others); these cover the product's formulation; a generic can sometimes use a different formulation.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2040-07-06.",
-      "text": "**Bottom line:** The earliest generic entry for AIRDUO RESPICLICK is expected to be January 6, 2041.\n\n**Barriers:**\n* If formulation patent 11173259 PED expires.\n* If formulation patent 11344685 PED expires.\n* If formulation patent 11969544 PED expires.\n \n**Carve-out view:** The generic label may not include method-of-use patents and indication-specific exclusivities, potentially allowing entry on July 6, 2040.\n\n**Watch for:** There are no challenge or market lines in the brief.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "brief": "Drug: AIRDUO RESPICLICK (FLUTICASONE PROPIONATE; SALMETEROL XINAFOATE, POWDER;INHALATION), made by TEVA PHARMACEUTICAL INDUSTRIES LTD.\nStatus: Generic approved, patents still listed.\nEarliest generic entry once every listed patent and exclusivity has expired: 2041-01-06 (last barrier: Formulation patent).\nGenerics are already FDA-approved (5 makers; first approval 2019-01-30).\nFormulation patents: 7 listed, the latest expiring 2041-01-06 (11173259, 11344685, 11969544 and others) (dates include 6-month pediatric extensions); these cover the product's formulation; a generic can sometimes use a different formulation.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2040-07-06.",
+      "text": "**Bottom line:** The earliest generic entry for AIRDUO RESPICLICK is expected to be January 6, 2041.\n\n**Barriers:**\n* If a formulation patent (e.g. 11173259) expires.\n* If the last barrier, Formulation patent, expires on 2041-01-06.\n\n**Carve-out view:** The generic label may not include method-of-use patents and indication-specific exclusivities if entry is allowed to occur before July 6, 2040.\n\n**Watch for:** \nNo challenge or market barriers are mentioned.\nThe likelihood of a generic entering the market early is uncertain.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "203168",
       "drug": "PROLENSA",
       "status": "Generic approved, patents still listed",
-      "seconds": 8.8,
-      "words": 40,
+      "seconds": 13.5,
+      "words": 86,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -219,19 +234,20 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: PROLENSA (BROMFENAC SODIUM, SOLUTION/DROPS;OPHTHALMIC), made by BAUSCH AND LOMB INC.\nStatus: Generic approved, patents still listed.\nEarliest generic entry once every listed patent and exclusivity has expired: 2033-11-11 (last barrier: Method-of-use patent).\nGenerics are already FDA-approved (7 makers; first approval 2014-01-22).\nMethod-of-use patents: 1 listed, the latest expiring 2033-11-11 (9517220); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nFormulation patents: 1 listed, the latest expiring 2032-11-19 (10085958); these cover the product's formulation; a generic can sometimes use a different formulation.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2032-11-19.\nPatent challenge (Paragraph IV): generic makers are challenging the patents, so entry can come before the listed dates through court wins or settlements; first filed 2013-07-26; 1 challenger(s).",
-      "text": "**Bottom line:** The earliest generic entry for PROLENSA is expected to be on November 11, 2033.\n\n**Barriers:**\n* \u2022 9517220\n* Exclusivity: \n  \u2022 10085958\n\u2022 Formulation patents:\n  \u2022 10085958\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for PROLENSA is expected to be on November 11, 2033.\n\n**Barriers:**\n* \u2022 9517220\n* Exclusivity: \n\u2022 10085958 \n\n**Carve-out view:** If method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come as early as November 19, 2032.\n\n**Watch for:** The patent challenge (Paragraph IV) filed in July 2013 by one or more generic makers may lead to an earlier entry through court wins or settlements.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "204061",
       "drug": "QUARTETTE",
       "status": "Generic approved, patents still listed",
-      "seconds": 14.7,
-      "words": 94,
+      "seconds": 12.3,
+      "words": 83,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -240,19 +256,20 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: QUARTETTE (ETHINYL ESTRADIOL; LEVONORGESTREL, TABLET;ORAL), made by TEVA BRANDED PHARMACEUTICAL PRODUCTS R AND D LLC.\nStatus: Generic approved, patents still listed.\nEarliest generic entry once every listed patent and exclusivity has expired: 2029-03-11 (last barrier: Formulation patent).\nGenerics are already FDA-approved (10 makers; first approval 2006-09-06).\nFormulation patents: 1 listed, the latest expiring 2029-03-11 (8415332); these cover the product's formulation; a generic can sometimes use a different formulation.\nCarve-out view: carving out uses does not bring entry earlier than 2029-03-11.\nPatent challenge (Paragraph IV): generic makers are challenging the patents, so entry can come before the listed dates through court wins or settlements; first filed 2013-07-10; 1 challenger(s).",
-      "text": "**Bottom line:** Generic approval is expected on March 11, 2029.\n\n**Barriers:**\n* The formulation patent (8415332) will expire on March 11, 2029.\n* There are no other patents listed as barriers to generic entry. \n\n**Carve-out view:** Carving out uses does not bring entry earlier than the expiration of all listed patents and exclusivities.\n\n**Watch for:** \n* Generic makers are challenging the existing patents through Paragraph IV challenges, which could potentially shorten the time to market.\n* The first challenge was filed in 2013.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** Generic approval is expected once all formulation patents expire on March 11, 2029.\n\n* ...patents: \u2022 8415332\n* Exclusivity:\n\t+ No exclusivity code listed.\n* Carve-out view: The FDA has carved out certain uses of QUARTETTE from the patent challenge, but this does not bring entry earlier than 2029-03-11.\n* Watch for: Generic makers are challenging the patents through Paragraph IV challenges, which could potentially lead to early generic entry.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     },
     {
       "appl_no": "207962",
       "drug": "ZTLIDO",
       "status": "Generic approved, patents still listed",
       "seconds": 14.4,
-      "words": 84,
+      "words": 96,
       "unsupported": {
         "patents": [],
         "exclusivity_codes": [],
         "dates": [],
-        "years": []
+        "years": [],
+        "percentages": []
       },
       "n_unsupported": 0,
       "bottom_line_ok": true,
@@ -261,7 +278,7 @@
       "timed_out": false,
       "disclaimer": true,
       "brief": "Drug: ZTLIDO (LIDOCAINE, PATCH;TOPICAL), made by SCILEX PHARMACEUTICALS INC.\nStatus: Generic approved, patents still listed.\nEarliest generic entry once every listed patent and exclusivity has expired: 2031-05-10 (last barrier: Formulation patent).\nGenerics are already FDA-approved (8 makers; first approval 2012-08-23).\nFormulation patents: 7 listed, the latest expiring 2031-05-10 (10765640, 10765749, 11278623 and others); these cover the product's formulation; a generic can sometimes use a different formulation.\nMethod-of-use patents: 1 listed, the latest expiring 2031-05-10 (11793766); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nCarve-out view: carving out uses does not bring entry earlier than 2031-05-10.\nPatent challenge (Paragraph IV): generic makers are challenging the patents, so entry can come before the listed dates through court wins or settlements; first filed 2022-03-17; 1 challenger(s).",
-      "text": "**Bottom line:** The earliest generic entry for ZTLIDO is expected to be on May 10, 2031.\n\n**Barriers:**\n* Formulation patent (10765640)\n* Exclusivity exclusivity code: EX-447\n* Method-of-use patent (11793766)\n\n**Carve-out view:** Carving out uses does not bring entry earlier than the listed date of May 10, 2031. \n\n**Watch for:** The generic makers are challenging the patents through Paragraph IV challenges, which could potentially lead to an earlier entry before the listed dates.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+      "text": "**Bottom line:** The earliest generic entry for ZTLIDO will be on May 10, 2031.\n\n**Barriers:**\n* Formulation patent (10765640)\n* Exclusivity code A\n* Method-of-use patent (11793766)\n\n**Carve-out view:** Carving out uses does not bring entry earlier than the listed date of May 10, 2031. The earliest generic entry will still be on this date.\n\n**Watch for:** Generic makers are challenging the patents through a Patent challenge (Paragraph IV) that was first filed in 2022-03-17; however, no court wins or settlements have been reported yet.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
     }
   ]
 }

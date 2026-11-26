@@ -38,6 +38,7 @@ Format (markdown, under 200 words):
 **Bottom line:** one sentence using the brief's "Earliest generic entry" date.
 **Barriers:** exactly one bullet per "... patents:" line and per "Exclusivity" line in the brief, in the
 brief's order. Never one bullet per patent. Quote that line's patent numbers only in its own bullet.
+If the brief has no "Exclusivity" line, write no exclusivity bullet and mention no exclusivity codes.
 **Carve-out view:** one or two sentences using the brief's carve-out line.
 **Watch for:** one or two sentences using the brief's challenge, market and likelihood lines, if present."""
 
@@ -54,6 +55,17 @@ def patent_type(p: dict[str, Any]) -> str:
     if p.get("product"):
         return "Formulation patents"
     return "Method-of-use patents" if p.get("use_codes") else "Other patents"
+
+
+def patent_types(patents: list[dict[str, Any]]) -> dict[str, str]:
+    """Type of each patent number. A pediatric extension ("1234567*PED") carries no type flags in
+    the Orange Book, so it takes its base patent's type: it extends that same barrier by 6 months."""
+    kind = {p["patent_no"]: patent_type(p) for p in patents}
+    for no in kind:
+        base = no.split("*")[0]
+        if no != base and base in kind:
+            kind[no] = kind[base]
+    return kind
 
 
 def build_brief(facts: dict[str, Any]) -> str:
@@ -76,15 +88,18 @@ def build_brief(facts: dict[str, Any]) -> str:
         )
 
     groups: dict[str, list[dict[str, Any]]] = {}
+    kinds = patent_types(facts.get("patents", []))
     for p in facts.get("patents", []):
         if p.get("expires") and not p.get("delisted"):
-            groups.setdefault(patent_type(p), []).append(p)
+            groups.setdefault(kinds[p["patent_no"]], []).append(p)
     for kind in sorted(groups, key=lambda k: max(p["expires"] for p in groups[k]), reverse=True):
         ps = sorted(groups[kind], key=lambda p: p["expires"], reverse=True)
-        nums = ", ".join(p["patent_no"] for p in ps[:MAX_NUMBERS]) + (" and others" if len(ps) > MAX_NUMBERS else "")
+        bases = list(dict.fromkeys(p["patent_no"].split("*")[0] for p in ps))  # newest first, extensions folded in
+        nums = ", ".join(bases[:MAX_NUMBERS]) + (" and others" if len(bases) > MAX_NUMBERS else "")
+        ped = " (dates include 6-month pediatric extensions)" if any("*PED" in p["patent_no"] for p in ps) else ""
         meaning = TYPE_MEANING.get(kind)
         lines.append(
-            f"{kind}: {len(ps)} listed, the latest expiring {ps[0]['expires']} ({nums})"
+            f"{kind}: {len(bases)} listed, the latest expiring {ps[0]['expires']} ({nums}){ped}"
             + (f"; these {meaning}." if meaning else ".")
         )
     for e in facts.get("exclusivities", []):

@@ -22,6 +22,8 @@ import explain  # noqa: E402
 import orange_book  # noqa: E402
 import partd  # noqa: E402
 import piv  # noqa: E402
+import radar  # noqa: E402
+import explanations  # noqa: E402
 
 REAL_DIR = Path(os.environ.get("RADAR_DATA_DIR", orange_book.DEFAULT_DIR))
 DEMO_DIR = ROOT / "tests" / "fixtures" / "orange_book"
@@ -37,26 +39,12 @@ st.set_page_config(page_title="Generic Entry Radar", page_icon="📡", layout="w
 
 @st.cache_data(show_spinner="Loading Orange Book ...")
 def load(data_dir: str, model_mtime: float):
-    ob = orange_book.load(Path(data_dir))
-    table = entry.build_entry_table(ob, today=TODAY)
-    bundle = attractiveness.load_model() if model_mtime else None
-    if bundle:
-        # Model estimate (0-100) that a generic arrives within 2 yrs of protection ending.
-        table["p_generic"] = table["appl_no"].map(attractiveness.score(bundle, ob, table, TODAY) * 100).round(0)
-    else:
-        table["p_generic"] = float("nan")
-    long = partd.load_long()
-    sp = partd.spend_features(table, long, TODAY)
-    table["partd_spend_m"] = ((10 ** sp["log_brand_spend"] - 1) / 1e6).round(1)
-    spend_year = partd.spend_year(long, TODAY) if long is not None else None
-    pv = piv.load()
-    if pv is not None:
-        table = table.merge(pv, on="appl_no", how="left")
-    else:
-        for c in ["piv_first_date", "piv_max_andas", "piv_status_180", "piv_ftf_approval", "piv_ftf_marketing", "piv_last_qualifying_patent"]:
-            table[c] = None
-    table.attrs["spend_year"] = spend_year
-    return ob, table
+    return radar.build_table(Path(data_dir), TODAY, with_model=bool(model_mtime))
+
+
+@st.cache_data
+def load_explanations(mtime: float = 0.0):
+    return explanations.load()
 
 
 # ---------------------------------------------------------------- data source
@@ -175,33 +163,10 @@ if view.empty:
 labels = (view["trade_name"] + " — " + view["ingredient"] + " (NDA " + view["appl_no"] + ")").tolist()
 pick = st.selectbox("Choose a drug", labels)
 appl_no = view["appl_no"].iloc[labels.index(pick)]
-facts = entry.drug_facts(ob, table, appl_no)
-p_gen = table.loc[table["appl_no"] == appl_no, "p_generic"].iloc[0]
-if pd.notna(p_gen):
-    facts["model_generic_likelihood_pct"] = int(p_gen)
-    facts["model_note"] = ("Statistical estimate that a generic is approved within 2 years after listed protection ends, "
-                           "trained on 2010-2022 Orange Book outcomes. Driven mostly by dosage form, route, "
-                           "patent count and Medicare Part D sales.")
-spend_m = table.loc[table["appl_no"] == appl_no, "partd_spend_m"].iloc[0]
+facts = radar.full_facts(ob, table, appl_no)
 prow = table.loc[table["appl_no"] == appl_no].iloc[0]
-
-
-def _d(v):
-    return v.strftime("%Y-%m-%d") if pd.notna(v) else None
-
-
+p_gen, spend_m = prow["p_generic"], prow["partd_spend_m"]
 has_piv = pd.notna(prow["piv_first_date"])
-if has_piv:
-    facts["paragraph_iv_challenge"] = {
-        "first_filed": _d(prow["piv_first_date"]),
-        "number_of_challenging_generics": None if pd.isna(prow["piv_max_andas"]) else int(prow["piv_max_andas"]),
-        "180_day_exclusivity_status": prow["piv_status_180"] or None,
-        "first_challenger_approved": _d(prow["piv_ftf_approval"]),
-        "first_challenger_launched": _d(prow["piv_ftf_marketing"]),
-        "last_qualifying_patent_expires": _d(prow["piv_last_qualifying_patent"]),
-    }
-if pd.notna(spend_m) and spend_m > 0:  # zero means no Part D sales: leave it out
-    facts[f"medicare_part_d_brand_spend_{table.attrs.get('spend_year')}_usd_millions"] = float(spend_m)
 
 st.markdown(f"**{facts['trade_name']}** · {facts['applicant']} · status: **{facts['status']}** · last barrier: {facts['main_barrier']}")
 a, b, c = st.columns(3)
@@ -254,12 +219,22 @@ with st.expander("Products and raw facts sent to the LLM"):
     st.json(facts)
 
 st.markdown("#### AI explanation")
-if not ok:
-    # No local LLM (e.g. the hosted demo): show the deterministic, verified brief instead.
-    st.caption("AI-written explanations run locally with Ollama. Without it, here is the verified brief the model "
-               "would be given, computed directly from the data.")
+_store_mtime = explanations.STORE.stat().st_mtime if explanations.STORE.exists() else 0.0
+stored, _ = explanations.current(load_explanations(_store_mtime), facts, TODAY)
+if stored:
+    # Written offline by the local model; checked when written and checked again just now against today's data.
+    st.caption(f"✅ Written by {stored['model']} on {stored['generated']} and fact-checked against the data, "
+               "then checked again just now: every patent, date, code and percentage is in today's data, "
+               "the bottom-line date is correct and patent types match.")
+    st.markdown(stored["text"])
+    with st.expander("Brief the model was given"):
+        st.text(stored["brief"])
+elif not ok:
+    # No local LLM (e.g. the hosted demo) and no stored answer: show the deterministic, verified brief.
+    st.caption("No pre-written AI explanation for this drug (they cover about 300 drugs with protection ending "
+               "soon, big Medicare spend or a patent challenge). Here is the verified brief computed from the data.")
     st.markdown(explain.brief_as_markdown(facts))
-elif st.button("Explain this drug's generic-entry outlook", type="primary"):
+if ok and st.button("Explain this drug's generic-entry outlook", type="primary"):
     try:
         with st.spinner(f"Writing and fact-checking with {explain.MODEL} ..."):
             text, report = explain.explain_checked(facts)

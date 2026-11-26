@@ -1,7 +1,7 @@
 """Grounding checks for LLM explanations: is every claim backed by the brief it was given?
 
 Checks:
-  * unsupported items: patent numbers, exclusivity codes, dates or years not in the brief
+  * unsupported items: patent numbers, exclusivity codes, dates, years or percentages not in the brief
   * bottom line: its date must be the true all-listed entry date
   * patent types: a patent number must not sit on a line naming a different patent type
 """
@@ -24,13 +24,16 @@ TYPE_WORDS = {
 def claims(text: str) -> dict[str, set[str]]:
     """Checkable items mentioned in the explanation."""
     full_dates = set(re.findall(r"\b(20\d\d|19\d\d)-(\d\d)-(\d\d)\b", text))
-    month_dates = re.findall(rf"\b({MONTHS})\s+(\d{{1,2}}),?\s+(\d{{4}})\b", text)
+    month_dates = re.findall(rf"\b({MONTHS})\s+(\d{{1,2}})(?:st|nd|rd|th)?,?\s+(\d{{4}})\b", text)
     return {
         "patents": set(re.findall(r"\b\d{7,8}(?:\*PED)?\b", text)),
-        "exclusivity_codes": set(re.findall(r"\b(?:ODE-\d+|I-\d+|D-\d+|M-\d+|NPP|NCE|PED|GAIN)\b", text)),
+        # Any code-shaped token, not only real Orange Book formats: small models invent "EX-485" or "U-203".
+        "exclusivity_codes": set(re.findall(r"\b(?:[A-Z]{1,5}-\d+|NPP|NCE|PED|GAIN|ODE)\b", text)),
         "dates": {"-".join(d) for d in full_dates}
         | {pd.Timestamp(f"{m} {d} {y}").strftime("%Y-%m-%d") for m, d, y in month_dates},
         "years": set(re.findall(r"\b(?:19|20)\d\d\b", text)),
+        "percentages": {x.replace(" ", "") for x in
+                        re.findall(r"\b\d{1,3}(?:\.\d+)?\s?%", text.replace(" percent", "%"))},
     }
 
 
@@ -44,6 +47,7 @@ def unsupported(text: str, source: str, today: pd.Timestamp) -> dict[str, list[s
         "exclusivity_codes": sorted(e for e in c["exclusivity_codes"] if e not in source),
         "dates": sorted(d for d in c["dates"] if d not in source_dates),
         "years": sorted(y for y in c["years"] if y not in allowed_years),
+        "percentages": sorted(x for x in c["percentages"] if x not in claims(source)["percentages"]),
     }
 
 
@@ -64,8 +68,8 @@ def bottom_line_ok(text: str, facts: dict) -> bool | None:
 
 def type_mismatches(text: str, facts: dict) -> list[str]:
     """Patent numbers placed on a line that names a different patent type."""
-    from explain import patent_type
-    kind = {p["patent_no"]: patent_type(p) for p in facts.get("patents", [])}
+    from explain import patent_types
+    kind = patent_types(facts.get("patents", []))
     bad = []
     for ln in text.splitlines():
         low = ln.lower()

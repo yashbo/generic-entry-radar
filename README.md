@@ -1,5 +1,7 @@
 # Generic Entry Radar
 
+**Live demo:** https://generic-entry-radar.streamlit.app
+
 Estimates when generic competition can enter for every NDA drug in the FDA Orange Book.
 It uses listed patents and exclusivities, and a local LLM explains each drug's outlook.
 

@@ -48,13 +48,18 @@ def unsupported(text: str, source: str, today: pd.Timestamp) -> dict[str, list[s
 
 
 def bottom_line_ok(text: str, facts: dict) -> bool | None:
-    """The first date in the Bottom line must be the all-listed entry date."""
+    """The Bottom line must state the all-listed entry date: the exact day, or its month and year."""
     want = facts.get("estimated_entry_all_listed")
-    line = next((ln for ln in text.splitlines() if "bottom line" in ln.lower()), "")
-    got = sorted(claims(line)["dates"])
     if not want:
         return None
-    return bool(got) and want in got and len(got) == 1
+    line = next((ln for ln in text.splitlines() if "bottom line" in ln.lower()), "")
+    got = claims(line)["dates"]
+    if got:
+        return got == {want}
+    # Month-and-year only ("May 2037"): accept if it is the right month, reject any other month.
+    months = {pd.Timestamp(f"1 {m} {y}").strftime("%Y-%m")
+              for m, y in re.findall(rf"\b({MONTHS})\s+(\d{{4}})\b", line)}
+    return months == {want[:7]}
 
 
 def type_mismatches(text: str, facts: dict) -> list[str]:

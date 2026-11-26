@@ -150,9 +150,21 @@ def _messages(facts: dict[str, Any]) -> list[dict[str, str]]:
     return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": "Brief:\n" + build_brief(facts)}]
 
 
+# Hard limits. Without num_predict a small model can fall into a repetition loop and
+# Ollama keeps generating forever (it shifts the context window instead of stopping),
+# so the HTTP read timeout never fires because tokens keep arriving.
+MAX_TOKENS = 450          # the format asks for <200 words (~300 tokens)
+MAX_SECONDS = 90          # wall-clock cap per answer
+
+
+class GenerationTimeout(RuntimeError):
+    pass
+
+
 def _post(facts: dict[str, Any]) -> requests.Response:
     body = {"model": MODEL, "messages": _messages(facts), "stream": True,
-            "options": {"temperature": 0.1, "num_ctx": NUM_CTX}}
+            "options": {"temperature": 0.1, "num_ctx": NUM_CTX, "num_predict": MAX_TOKENS,
+                        "repeat_penalty": 1.15}}
     for attempt in range(2):
         r = requests.post(f"{HOST}/api/chat", json=body, stream=True, timeout=300)
         # A 5xx usually means the model runner crashed while loading; Ollama restarts it.
@@ -166,8 +178,12 @@ def _post(facts: dict[str, Any]) -> requests.Response:
 
 def explain_stream(facts: dict[str, Any]) -> Iterator[str]:
     """Yield the explanation text as it is generated, then the disclaimer."""
+    start = time.monotonic()
     with _post(facts) as r:
         for line in r.iter_lines():
+            if time.monotonic() - start > MAX_SECONDS:
+                # Closing the response makes Ollama abort the generation.
+                raise GenerationTimeout(f"stopped after {MAX_SECONDS}s")
             if not line:
                 continue
             chunk = json.loads(line)
@@ -200,7 +216,11 @@ def explain_checked(facts: dict[str, Any], attempts: int = 2) -> tuple[str, dict
     brief = build_brief(facts)
     report: dict = {}
     for i in range(1, attempts + 1):
-        text = explain(facts)
+        try:
+            text = explain(facts)
+        except GenerationTimeout as exc:
+            report = {"pass": False, "issues": [f"generation {exc}"], "attempts": i, "fallback": False}
+            continue
         report = grounding.check(text, facts, brief)
         report.update(attempts=i, fallback=False)
         if report["pass"]:

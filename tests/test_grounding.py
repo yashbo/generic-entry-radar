@@ -60,6 +60,13 @@ def test_month_name_dates_are_understood():
     assert grounding.bottom_line_ok(text, FACTS) is True
 
 
+def test_month_and_year_only_bottom_line():
+    # Entry is 2033-08-15: "August 2033" is right, "March 2031" (the carve-out month) is wrong.
+    assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected in August 2033.", FACTS) is True
+    assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected in March 2031.", FACTS) is False
+    assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected soon.", FACTS) is False
+
+
 def test_fallback_is_the_brief_plus_disclaimer():
     md = explain.brief_as_markdown(FACTS)
     assert md.startswith("- Drug: PROTECTA") and md.rstrip().endswith(explain.DISCLAIMER)

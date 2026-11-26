@@ -86,12 +86,28 @@ The model answers the question the backtest raised: **will a generic come at all
 - **Surprise:** molecules that already have generics in another form are slightly *less* likely to attract one for a new form (39% vs 42%). These are life-cycle products whose market is already served by the cheap version.
 - **In the dashboard:** a "Generic likelihood" column, a KPI for drugs losing protection within 3 years that will likely get a generic, the score passed to the LLM explainer, and a **Model** page with evaluation, feature importance and calibration.
 
+## LLM explainer and its fact check
+Small local models misread raw JSON: in early tests llama3.2:3b put the carve-out date in the bottom line and relabelled method-of-use patents as formulation patents. So the design is **code analyses, model writes**:
+
+1. `explain.build_brief` turns a drug's facts into short labelled sentences, with dates already computed and patents already grouped by type.
+2. The model rewrites that brief for a business reader (`explain.py`, local Ollama).
+3. `grounding.py` checks the answer: no patent number, exclusivity code, date or year that isn't in the brief; the bottom-line date is the true entry date; no patent number sits under the wrong type.
+4. In the app, a failed check gets one retry. A second failure shows the verified brief instead, and the disclaimer is always added in code.
+
+Generation is capped at 450 tokens and 90 seconds. Without a cap, the model once fell into a repetition loop that Ollama never stopped.
+
+```powershell
+python generic_entry_radar/eval_explainer.py --n 12
+```
+**Latest run (llama3.2:3b on a 4 GB RTX 3050):** 12/12 answers passed every check (12/12 grounded, 12/12 correct bottom line, 0 type errors, 0 timeouts), with a median of 14 seconds per answer. The results are in `data/explainer_eval.json`.
+
 ## Tests
 ```powershell
 python generic_entry_radar/tests/test_entry.py
 python generic_entry_radar/tests/test_backtest.py
 python generic_entry_radar/tests/test_attractiveness.py
 python generic_entry_radar/tests/test_piv.py
+python generic_entry_radar/tests/test_grounding.py
 ```
 
 ## Files
@@ -104,6 +120,7 @@ python generic_entry_radar/tests/test_piv.py
 - `features.py`, `attractiveness.py`, `pages/2_Model.py`: point-in-time features and the attractiveness model
 - `fetch_partd.py`, `partd.py`: Medicare Part D spending and its matching to Orange Book drugs
 - `piv.py`: Paragraph IV list parsing and point-in-time challenge features
+- `grounding.py`, `eval_explainer.py`: fact checks for LLM answers and the evaluation script
 
 ## Next ideas
 - **Broader sales data.** Medicaid State Drug Utilization Data (data.medicaid.gov) would cover a second payer.

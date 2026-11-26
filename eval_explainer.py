@@ -66,19 +66,23 @@ def main() -> int:
                                                "number_of_challenging_generics": None if pd.isna(row["piv_max_andas"]) else int(row["piv_max_andas"])}
         brief = explain.build_brief(facts)
         t0 = time.time()
-        text = explain.explain(facts)
+        timed_out = False
+        try:
+            text = explain.explain(facts)
+        except explain.GenerationTimeout:
+            text, timed_out = "", True
         secs = time.time() - t0
         bad = unsupported(text, brief, today)
         n_bad = sum(len(v) for v in bad.values())
         bl = bottom_line_ok(text, facts)
         tm = type_mismatches(text, facts)
-        ok = n_bad == 0 and bl is not False and not tm
+        ok = not timed_out and n_bad == 0 and bl is not False and not tm
         results.append({"appl_no": appl_no, "drug": facts["trade_name"], "status": facts["status"], "seconds": round(secs, 1),
                         "words": len(text.split()), "unsupported": bad, "n_unsupported": n_bad,
-                        "bottom_line_ok": bl, "type_mismatches": tm, "pass": ok,
+                        "bottom_line_ok": bl, "type_mismatches": tm, "pass": ok, "timed_out": timed_out,
                         "disclaimer": "not legal advice" in text.lower(), "brief": brief, "text": text})
         print(f"{facts['trade_name'][:28]:28s} {facts['status'][:26]:26s} {secs:5.1f}s  "
-              f"{'PASS' if ok else 'FAIL'}  unsupported={n_bad}{'' if not n_bad else bad}  "
+              f"{'PASS' if ok else 'FAIL'}{' (timeout)' if timed_out else ''}  unsupported={n_bad}{'' if not n_bad else bad}  "
               f"bottom_line={bl}  type_errors={tm or 0}")
 
     summary = {"model": explain.MODEL, "n": len(results),
@@ -87,6 +91,7 @@ def main() -> int:
                "bottom_line_correct": sum(r["bottom_line_ok"] is not False for r in results),
                "no_type_errors": sum(not r["type_mismatches"] for r in results),
                "with_disclaimer": sum(r["disclaimer"] for r in results),
+               "timeouts": sum(r["timed_out"] for r in results),
                "median_seconds": float(pd.Series([r["seconds"] for r in results]).median())}
     OUT.write_text(json.dumps({"summary": summary, "results": results}, indent=2))
     print(f"\n{summary}\nSaved {OUT}")

@@ -119,7 +119,7 @@ python generic_entry_radar/explanations.py --limit 300
 
 - **Which drugs:** protected drugs whose listed protection ends within 5 years, then drugs where a carve-out is possible now, then the biggest Medicare Part D spend, then Paragraph IV challenges.
 - **Same pipeline as the Explain button:** write, fact-check, one retry. Only answers that pass are kept in `data/explanations.json`, together with the brief each was checked against.
-- **Latest batch:** 272 of 300 drugs got a stored answer; the other 28 failed the check twice and show the brief. The stricter check later removed 23 more, so 249 are stored; rerunning the command above retries the rest.
+- **Latest batch:** 289 of 300 drugs have a stored answer that passes the current fact check (including the invented-exclusivity check); the other 11 failed twice and show the brief. Why each failed, attempt by attempt, is in `data/explanation_failures.json`. Most are invented patent numbers such as `US 10,439,111`.
 - **Checked again at display time:** the app reruns the fact check against today's data and also requires the drug's status to be unchanged. A stored answer whose dates, numbers or status have gone stale is not shown; the verified brief appears instead.
 
 ## Tests

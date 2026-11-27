@@ -1,0 +1,250 @@
+{
+ "model": "llama3.2:3b",
+ "failures": {
+  "219910": {
+   "trade_name": "EPIOXA HD/EPIOXA KIT",
+   "brief": "Drug: EPIOXA HD/EPIOXA KIT (RIBOFLAVIN 5'-PHOSPHATE SODIUM, SOLUTION/DROPS;OPHTHALMIC), made by GLAUKOS CORP.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2028-10-17 (last barrier: Exclusivity).\nExclusivity NP (New product (3 years)) runs until 2028-10-17.\nCarve-out view: carving out uses does not bring entry earlier than 2028-10-17.\nStatistical model: 10% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['US 10,141,444', 'US 9,943,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for EPIOXA HD/EPIOXA KIT is expected to be on October 17, 2028.\n\n**Barriers:**\n* ... patents:\n\t+ * US 9,943,111\n\t+ * US 10,141,444\n* Exclusivity:\n\t+ * NP (New product): until October 17, 2028\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: patents ['US 10,111,411', 'US 11,444,123']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for EPIOXA HD/EPIOXA KIT is expected to be on October 17, 2028.\n\n**Barriers:**\n* ... patents:\n\t+ * US 10,111,411\n\t+ * US 11,444,123\n* Exclusivity:\n\t+ * NP (New product): expires on October 17, 2028\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "219962": {
+   "trade_name": "TYLENOL WITH NAPROXEN",
+   "brief": "Drug: TYLENOL WITH NAPROXEN (ACETAMINOPHEN; NAPROXEN SODIUM, TABLET;ORAL), made by KENVUE BRANDS LLC.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2029-07-24 (last barrier: Exclusivity).\nExclusivity NP (New product (3 years)) runs until 2029-07-24.\nCarve-out view: carving out uses does not bring entry earlier than 2029-07-24.\nStatistical model: 31% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['US 10,439,111', 'US 8,661,444']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for TYLENOL WITH NAPROXEN is expected to be on July 24, 2029.\n\n**Barriers:**\n* ... patents:\n\t+ * US 8,661,444\n\t+ * US 10,439,111\n* Exclusivity:\n\t+ * NP (New product (3 years))\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: patents ['USP 8,533,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for TYLENOL WITH NAPROXEN is expected to be on July 24, 2029.\n\n**Barriers:**\n* ... patents:\n\t+ *USP 8,533,111*\n* Exclusivity\n\t+ *NP (New product (3 years))*: until July 24, 2029\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "219990": {
+   "trade_name": "GWYN LO",
+   "brief": "Drug: GWYN LO (ETHINYL ESTRADIOL; NORELGESTROMIN, SYSTEM;TRANSDERMAL), made by VIATRIS SPECIALITY LLC.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2029-07-28 (last barrier: Exclusivity).\nExclusivity NP (New product (3 years)) runs until 2029-07-28.\nCarve-out view: carving out uses does not bring entry earlier than 2029-07-28.\nStatistical model: 11% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['US 10,439,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for Gwyn Lo is expected to be on July 28, 2029.\n\n**Barriers:**\n* ... patents:\n\t+ • US 10,439,111\n* Exclusivity:\n\t+ • NP (New product (3 years)) until 2029-07-28\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: patents ['7,434,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for Gwyn Lo is expected to be on July 28, 2029.\n\n**Barriers:**\n* ... patents:\n\t+ 7,434,111\n* Exclusivity:\n\t+ NP (New product (3 years)) until 2029-07-28\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "214518": {
+   "trade_name": "TPOXX",
+   "brief": "Drug: TPOXX (TECOVIRIMAT, SOLUTION;INTRAVENOUS), made by SIGA TECHNOLOGIES INC.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2031-09-04 (last barrier: Method-of-use patent).\nMethod-of-use patents: 2 listed, the latest expiring 2031-09-04 (7737168, 9907859); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nFormulation patents: 3 listed, the latest expiring 2031-08-02 (10576165, 9233097, 8039504); these cover the product's formulation; a generic can sometimes use a different formulation.\nExclusivities: none listed.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2031-08-02.\nStatistical model: 13% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: years ['2029']",
+      "bottom line does not state 2031-09-04"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for TPOXX is expected to be in September 2029, approximately two years after the last method-of-use patent expires.\n\n**Barriers:**\n* • 7737168\n* • 9907859\n• Exclusivity: none listed\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: years ['2029']",
+      "bottom line does not state 2031-09-04"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for TPOXX is expected to be in September 2029, as the last method-of-use patent expires on that date.\n\n**Barriers:**\n* • 7737168\n* • 9907859\n• Exclusivity: none listed\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "210115": {
+   "trade_name": "PROGRAF",
+   "brief": "Drug: PROGRAF (TACROLIMUS, FOR SUSPENSION;ORAL), made by ASTELLAS PHARMA US INC.\nStatus: Carve-out possible now.\nEarliest generic entry once every listed patent and exclusivity has expired: 2028-07-16 (last barrier: Exclusivity).\nExclusivity ODE-360 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2028-07-16.\nCarve-out view: compound and formulation protection has already expired, so a generic with the protected uses carved out of its label could be possible now.\nMarket: Medicare Part D spent $4 million on this brand in 2024 (Medicare retail prescriptions only).\nStatistical model: 53% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['US 9,555,444']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for PROGRAF is expected to be July 16, 2028.\n\n* ... patents:\n  * US 9,555,444\n* Exclusivity:\n  * ODE-360: Orphan drug exclusivity (7 years, indication-specific) runs until July 16, 2028.\n* Carve-out view: The compound and formulation protection has already expired, making it possible for a generic with carved-out protected uses to be developed now.\n* Watch for: There is a 53% chance that a generic will be approved within two years of the exclusivity ending.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: patents ['7,434,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for PROGRAF is expected to be July 16, 2028.\n\n* ... patents:\n\t+ 7,434,111\n* Exclusivity:\n\t+ ODE-360: until July 16, 2028\n* Carve-out view: With compound and formulation protection already expired, a generic could potentially enter the market with carved-out uses from its label.\n* Watch for: There is a 53% chance that a generic will be approved within two years of exclusivity ending.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "207223": {
+   "trade_name": "DIACOMIT",
+   "brief": "Drug: DIACOMIT (STIRIPENTOL, FOR SUSPENSION;ORAL), made by BIOCODEX SA.\nStatus: Carve-out possible now.\nEarliest generic entry once every listed patent and exclusivity has expired: 2029-07-14 (last barrier: Exclusivity).\nExclusivity ODE-403 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2029-07-14.\nCarve-out view: compound and formulation protection has already expired, so a generic with the protected uses carved out of its label could be possible now.\nMarket: Medicare Part D spent $2 million on this brand in 2024 (Medicare retail prescriptions only).\nStatistical model: 47% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['US 10,439,911', 'US 11,111,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry date for DIACOMIT is set to be July 14, 2029.\n\n* ... patents:\n  • US 10,439,911\n  • US 11,111,111\n* Exclusivity:\n  • ODE-403 (Orphan drug exclusivity (7 years, indication-specific)) \nExclusivity: none listed\n\n**Carve-out view:** The compound and formulation protection for DIACOMIT has already expired, making it possible to create a generic with carved-out protected uses.\n\n**Watch for:** There is a 47% chance that a generic will be approved within two years of the exclusivity ending.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: patents ['US 11,111,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry date for DIACOMIT is July 14, 2029.\n\n* ... patents:\n  • US 11,111,111\n* Exclusivity:\n  • ODE-403: Orphan drug exclusivity (7 years, indication-specific) runs until July 14, 2029.\n* Carve-out view: The compound and formulation protection has already expired, allowing for a generic with carved-out protected uses to be possible now.\n* Watch for: There is a 47% chance of a generic approval within two years of the exclusivity ending.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "206709": {
+   "trade_name": "DIACOMIT",
+   "brief": "Drug: DIACOMIT (STIRIPENTOL, CAPSULE;ORAL), made by BIOCODEX SA.\nStatus: Carve-out possible now.\nEarliest generic entry once every listed patent and exclusivity has expired: 2029-07-14 (last barrier: Exclusivity).\nExclusivity ODE-403 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2029-07-14.\nCarve-out view: compound and formulation protection has already expired, so a generic with the protected uses carved out of its label could be possible now.\nMarket: Medicare Part D spent $2 million on this brand in 2024 (Medicare retail prescriptions only).\nStatistical model: 52% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['US 10,439,111', 'US 11,141,441']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry date for DIACOMIT is July 14, 2029.\n\n* ... patents:\n  * US 10,439,111: \n  * US 11,141,441\n* Exclusivity:\n  * ODE-403 (Orphan drug exclusivity (7 years, indication-specific)) runs until July 14, 2029.\n* Carve-out view: The compound and formulation protection has already expired, allowing for a generic with carved out protected uses to be possible now.\n* Watch for: There is a 52% chance that a generic will be approved within two years of the exclusivity ending.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: patents ['US 10,439,111', 'US 11,124,444']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for DIACOMIT is expected to be July 14, 2029.\n\n* ... patents:\n  • US 10,439,111\n  • US 11,124,444\n* Exclusivity:\n  • ODE-403 (Orphan drug exclusivity (7 years, indication-specific)) runs until July 14, 2029.\n* Carve-out view: The compound and formulation protection has already expired, allowing for a generic with carved out protected uses to be possible now.\n* Watch for: There is a 52% chance that a generic will be approved within two years of the exclusivity ending.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "020899": {
+   "trade_name": "OPTISON",
+   "brief": "Drug: OPTISON (ALBUMIN HUMAN, INJECTABLE;INJECTION), made by GE HEALTHCARE.\nStatus: Carve-out possible now.\nEarliest generic entry once every listed patent and exclusivity has expired: 2028-05-09 (last barrier: Exclusivity).\nExclusivity NPP (New patient population (3 years, label-specific)) runs until 2028-05-09.\nCarve-out view: compound and formulation protection has already expired, so a generic with the protected uses carved out of its label could be possible now.\nStatistical model: 6% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['US 10,439,111', 'US 11,444,123']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for OPTISON is expected to occur on May 9, 2028.\n\n* ... patents:\n  • US 10,439,111\n  • US 11,444,123\n* Exclusivity:\n  • NPP (New patient population (3 years, label-specific)) until May 9, 2028\n\n**Carve-out view:** The compound and formulation protection for OPTISON has already expired, allowing a generic to be developed with the protected uses carved out of its label.\n\n**Watch for:** There is a 6% chance that a generic will be approved within two years of the exclusivity period ending.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: years ['2011']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for OPTISON is expected to occur on May 9, 2028.\n\n**Barriers:**\n* ... patents:\n\t+ 11-2011-001US\n* Exclusivity:\n\t+ NPP (New patient population (3 years, label-specific))\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "214988": {
+   "trade_name": "DEHYDRATED ALCOHOL",
+   "brief": "Drug: DEHYDRATED ALCOHOL (DEHYDRATED ALCOHOL, SOLUTION;INTRAVENOUS), made by BE PHARMACEUTICALS INC.\nStatus: Carve-out possible now.\nEarliest generic entry once every listed patent and exclusivity has expired: 2032-10-23 (last barrier: Exclusivity).\nExclusivity ODE-521 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2032-10-23.\nCarve-out view: compound and formulation protection has already expired, so a generic with the protected uses carved out of its label could be possible now.\nStatistical model: 34% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: patents ['0164461']",
+      "not in brief: years ['2019']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry date for DEHYDRATED ALCOHOL is October 23, 2032.\n\n**Barriers:**\n* ... patents:\n\t+ 11-2019-0164461\n* Exclusivity:\n\t+ ODE-521 (Orphan drug exclusivity (7 years, indication-specific))\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: patents ['US 10,439,421', 'US 9,434,111']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry date for DEHYDRATED ALCOHOL is October 23, 2032.\n\n**Barriers:**\n* ... patents:\n\t+ * US 9,434,111\n\t+ * US 10,439,421\n* Exclusivity:\n\t+ * ODE-521 (Orphan drug exclusivity (7 years, indication-specific))\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "210867": {
+   "trade_name": "MOXIDECTIN",
+   "brief": "Drug: MOXIDECTIN (MOXIDECTIN, TABLET;ORAL), made by MEDICINES DEVELOPMENT FOR GLOBAL HEALTH.\nStatus: Carve-out possible now.\nEarliest generic entry once every listed patent and exclusivity has expired: 2032-02-07 (last barrier: Exclusivity).\nExclusivity NPP (New patient population (3 years, label-specific)) runs until 2028-02-07.\nExclusivity ODE-528 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2032-02-07.\nCarve-out view: compound and formulation protection has already expired, so a generic with the protected uses carved out of its label could be possible now.\nStatistical model: 42% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "not in brief: years ['2019']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry date for MOXIDECTIN is expected to be February 7, 2032.\n\n**Barriers:**\n* ... patents:\n\t+ 11/2019 USP\n* Exclusivity:\n\t+ NPP runs until February 7, 2028\n\t+ ODE-528 runs until February 7, 2032\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "not in brief: years ['2019']"
+     ],
+     "text": "**Bottom line:** The earliest generic entry date for MOXIDECTIN is expected to be February 7, 2032.\n\n**Barriers:**\n* ... patents:\n\t+ 10-1583/2019\n* Exclusivity:\n\t+ NPP runs until February 7, 2028.\n\t+ ODE-528 runs until February 7, 2032.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  },
+  "202806": {
+   "trade_name": "TAFINLAR",
+   "brief": "Drug: TAFINLAR (DABRAFENIB MESYLATE, CAPSULE;ORAL), made by NOVARTIS PHARMACEUTICALS CORP.\nStatus: Protected.\nEarliest generic entry once every listed patent and exclusivity has expired: 2034-02-28 (last barrier: Method-of-use patent).\nMethod-of-use patents: 3 listed, the latest expiring 2034-02-28 (10869869, 8952018, 9233956) (dates include 6-month pediatric extensions); these cover specific uses; a generic can often leave those uses off its label (carve-out).\nCompound patents: 3 listed, the latest expiring 2031-04-15 (8703781, 7994185, 8415345) (dates include 6-month pediatric extensions); these cover the active molecule itself; the hardest barrier to design around.\nExclusivity I-908 (New indication (3 years, indication-specific)) runs until 2026-03-16.\nExclusivity ODE-428 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2030-03-16.\nExclusivity PED (Pediatric exclusivity (+6 months)) runs until 2030-09-16.\nCarve-out view: if method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2030-10-15.\nPatent challenge (Paragraph IV): generic makers are challenging the patents, so entry can come before the listed dates through court wins or settlements; first filed 2025-11-13; 1 challenger(s).\nMarket: Medicare Part D spent $174 million on this brand in 2024 (Medicare retail prescriptions only).\nStatistical model: 96% chance a generic is approved within 2 years of protection ending (whether generic makers will bother at all).",
+   "model": "llama3.2:3b",
+   "generated": "2026-11-27",
+   "attempts": [
+    {
+     "attempt": 1,
+     "issues": [
+      "bottom line does not state 2034-02-28"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for TAFINLAR is expected to be around 2030-10-15, assuming method-of-use patents and indication-specific exclusivities are left off the generic label.\n\n* ...patents: \n    • 10869869\n    • 8952018\n    • 9233956\n\nExclusivity:\n    • I-908 (New indication (3 years, indication-specific)) runs until 2026-03-16.\n    • ODE-428 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2030-03-16.\n    • PED (Pediatric exclusivity (+6 months)) runs until 2030-09-16.\n\n**Carve-out view:** If method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2030-10-15. This carve-out is due to the fact that a generic can often leave those uses off its label.\n\n* Watch for: \n    • Patent challenge (Paragraph IV): generic makers are challenging the patents, so entry can come before the listed dates through court wins or settlements; first filed 2025-11-13.\n    • Market: Medicare Part D spent $174 million on this brand in 2024 (Medicare retail prescriptions only).\n    • Statistical model: a generic is approved within 2 years of protection ending with a 96% chance.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    },
+    {
+     "attempt": 2,
+     "issues": [
+      "bottom line does not state 2034-02-28"
+     ],
+     "text": "**Bottom line:** The earliest generic entry for TAFINLAR is expected to be around 2030-10-15, assuming method-of-use patents and indication-specific exclusivities are left off the generic label.\n\n**Barriers:**\n* • 10869869\n* Exclusivity I-908 (New indication (3 years, indication-specific)) runs until 2026-03-16.\n* Exclusivity ODE-428 (Orphan drug exclusivity (7 years, indication-specific)) runs until 2030-03-16.\n* Exclusivity PED (Pediatric exclusivity (+6 months)) runs until 2030-09-16.\n\n**Carve-out view:** If method-of-use patents and indication-specific exclusivities are left off the generic label, entry could come on 2030-10-15. This carve-out allows for a potential earlier entry date if certain patent protections are not included in the generic formulation.\n\n**Watch for:** The high likelihood of approval (96%) within two years of protection ending suggests that generic makers may attempt to challenge patents through Paragraph IV, potentially leading to an early entry before 2034-02-28.\n\n_Estimate based on listed Orange Book data only; not legal advice._"
+    }
+   ]
+  }
+ }
+}

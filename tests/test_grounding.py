@@ -72,6 +72,71 @@ def test_invented_code_formats_are_caught():
     assert grounding.unsupported(text, BRIEF, TODAY)["exclusivity_codes"] == ["EX-485", "U-203"]
 
 
+def test_codes_without_hyphen_are_caught():
+    text = "* Exclusivity code EX485 and use code U203 apply; XA4 too."
+    assert grounding.unsupported(text, BRIEF, TODAY)["exclusivity_codes"] == ["EX485", "U203", "XA4"]
+
+
+def test_lowercase_codes_are_caught():
+    text = "* Exclusivity code ex-485 and use code u-203 apply."
+    assert grounding.unsupported(text, BRIEF, TODAY)["exclusivity_codes"] == ["ex-485", "u-203"]
+
+
+def test_code_spelling_matches_the_brief_in_any_form():
+    brief = BRIEF + "\nExclusivity M-14 (new indication) runs until 2029-01-01."
+    for text in ("Exclusivity M-14 applies.", "Exclusivity M14 applies.", "Exclusivity m-14 applies."):
+        assert grounding.unsupported(text, brief, TODAY)["exclusivity_codes"] == [], text
+
+
+def test_codes_with_letter_suffix_are_caught():
+    text = "* Exclusivity USP-0003A and U-0000A apply."
+    assert grounding.unsupported(text, BRIEF, TODAY)["exclusivity_codes"] == ["U-0000A", "USP-0003A"]
+
+
+def test_words_with_numbers_are_not_codes():
+    text = "Entry is post-2030, in Q3 or FY2027, for type-2 patients after phase-3 trials."
+    assert grounding.unsupported(text, BRIEF, TODAY)["exclusivity_codes"] == []
+
+
+def test_patent_numbers_with_commas_are_caught():
+    text = "* Patents 6,123,456 and US 10,661,111 and U.S. Patent No. 9,444,111 apply."
+    assert grounding.unsupported(text, BRIEF, TODAY)["patents"] == [
+        "6,123,456", "U.S. Patent No. 9,444,111", "US 10,661,111"]
+
+
+def test_patent_numbers_in_the_brief_pass_in_any_form():
+    text = "* Patents 9,000,001, US 9000002 and US 9,000,001 apply."
+    assert grounding.unsupported(text, BRIEF, TODAY)["patents"] == []
+
+
+def test_dollar_amounts_are_not_patents():
+    assert grounding.unsupported("Spend was $1,234,567 last year.", BRIEF, TODAY)["patents"] == []
+
+
+def test_malformed_and_reissue_patents_are_caught():
+    text = "* USP 8-1441 and reissue RE47691 apply."
+    assert grounding.unsupported(text, BRIEF, TODAY)["patents"] == ["RE47691", "USP 8-1441"]
+
+
+def test_comma_patent_type_mismatch_is_caught():
+    text = "* Compound patents (9,000,002) expire 2033-08-15."
+    assert grounding.type_mismatches(text, FACTS) and "9000002" in grounding.type_mismatches(text, FACTS)[0]
+
+
+def test_invented_nda_numbers_are_caught():
+    text = "PROTECTA (NDA 021234, see also ANDA #076543 and application no. 200677) is protected."
+    assert grounding.unsupported(text, BRIEF, TODAY)["nda_numbers"] == [
+        "ANDA #076543", "NDA 021234", "application no. 200677"]
+    r = grounding.check("**Bottom line:** Generic entry is expected on 2033-08-15 (NDA 021234).", FACTS, BRIEF, TODAY)
+    assert not r["pass"] and r["unsupported"]["nda_numbers"] == ["NDA 021234"]
+
+
+def test_the_drugs_own_nda_number_is_allowed():
+    text = f"**Bottom line:** Generic entry for NDA {FACTS['appl_no']} is expected on 2033-08-15."
+    r = grounding.check(text, FACTS, BRIEF, TODAY)
+    assert r["pass"], r["issues"]
+
+
 def test_percentages_must_match_the_brief():
     brief = BRIEF + "\nStatistical model: 62% chance a generic is approved within 2 years of protection ending."
     assert grounding.unsupported("The model gives a 62 percent chance.", brief, TODAY)["percentages"] == []

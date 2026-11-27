@@ -91,7 +91,7 @@ Small local models misread raw JSON: in early tests llama3.2:3b put the carve-ou
 
 1. `explain.build_brief` turns a drug's facts into short labelled sentences, with dates already computed and patents already grouped by type. Pediatric extensions (`*PED`) carry no type flags in the Orange Book, so each is folded into the patent it extends rather than listed as an "other" patent.
 2. The model rewrites that brief for a business reader (`explain.py`, local Ollama).
-3. `grounding.py` checks the answer: no patent number, exclusivity code, date, year or percentage that isn't in the brief; the bottom-line date is the true entry date; no patent number sits under the wrong type.
+3. `grounding.py` checks the answer: no patent number, exclusivity code, NDA number, date, year or percentage that isn't in the brief (numbers and codes are compared in a normal form, so `6,123,456` and `US 6123456` are one patent, and `EX485`, `ex-485` and `EX-485` are one code); the bottom-line date is the true entry date; no patent number sits under the wrong type.
 4. In the app, a failed check gets one retry. A second failure shows the verified brief instead, and the disclaimer is always added in code.
 
 Generation is capped at 450 tokens and 90 seconds. Without a cap, the model once fell into a repetition loop that Ollama never stopped.
@@ -108,7 +108,7 @@ python generic_entry_radar/eval_explainer.py --n 12
 
 Results are in `data/explainer_eval.json` and `data/explainer_eval_llama3.1-8b.json` (`--model` and `--out` pick the model and file). Both 3B failures are invented codes ("EX-001", "NDA-198"), which the check catches, so the app retries or shows the brief. The 8B model is more faithful and writes slightly clearer prose, but it is 2–3.5× slower on this hardware, so 3B stays the default.
 
-The model comparison also improved the pipeline. On the first 8B run, a muddled brief led it to a wrong AirDuo date: pediatric extensions were listed as "other" patents, so the brief's last-barrier date did not match any patent group. The checker also wrongly rejected two correct dates, "May 2037" and "May 10th, 2031". All three are fixed, with tests. A manual read of the first batch of stored answers then found codes the model had made up ("EX-485", "U-203") in 54 of 290: the check only knew real Orange Book code formats. It now flags any code-shaped token not in the brief.
+The model comparison also improved the pipeline. On the first 8B run, a muddled brief led it to a wrong AirDuo date: pediatric extensions were listed as "other" patents, so the brief's last-barrier date did not match any patent group. The checker also wrongly rejected two correct dates, "May 2037" and "May 10th, 2031". All three are fixed, with tests. A manual read of the first batch of stored answers then found codes the model had made up ("EX-485", "U-203") in 54 of 290: the check only knew real Orange Book code formats. It now flags any code-shaped token not in the brief. A later pass closed further gaps: codes without a hyphen (`EX485`, `XA4`) or in lowercase (`ex-485`), codes with a letter suffix (`U-0000A`), patent numbers written with commas or a `US` prefix (`US 10,661,111`, `US8217811`), malformed or reissue patents (`USP 8-1441`, `RE47691`) and made-up NDA numbers. Re-running it on the 272 stored answers rejected 23, all with invented numbers or codes; they were removed from the store.
 
 ### AI answers on the hosted app
 The hosted app has no LLM, so the AI answers for about 300 drugs are written in advance on a laptop:
@@ -119,7 +119,7 @@ python generic_entry_radar/explanations.py --limit 300
 
 - **Which drugs:** protected drugs whose listed protection ends within 5 years, then drugs where a carve-out is possible now, then the biggest Medicare Part D spend, then Paragraph IV challenges.
 - **Same pipeline as the Explain button:** write, fact-check, one retry. Only answers that pass are kept in `data/explanations.json`, together with the brief each was checked against.
-- **Latest batch:** 272 of 300 drugs have a stored answer; the other 28 failed the check twice and show the brief.
+- **Latest batch:** 272 of 300 drugs got a stored answer; the other 28 failed the check twice and show the brief. The stricter check later removed 23 more, so 249 are stored; rerunning the command above retries the rest.
 - **Checked again at display time:** the app reruns the fact check against today's data and also requires the drug's status to be unchanged. A stored answer whose dates, numbers or status have gone stale is not shown; the verified brief appears instead.
 
 ## Tests

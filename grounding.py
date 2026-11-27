@@ -4,6 +4,7 @@ Checks:
   * unsupported items: patent numbers, exclusivity codes, dates, years or percentages not in the brief
   * bottom line: its date must be the true all-listed entry date
   * patent types: a patent number must not sit on a line naming a different patent type
+  * invented exclusivity: when the brief lists none, the text must not describe one
 """
 from __future__ import annotations
 
@@ -28,7 +29,7 @@ def claims(text: str) -> dict[str, set[str]]:
     return {
         "patents": set(re.findall(r"\b\d{7,8}(?:\*PED)?\b", text)),
         # Any code-shaped token, not only real Orange Book formats: small models invent "EX-485" or "U-203".
-        "exclusivity_codes": set(re.findall(r"\b(?:[A-Z]{1,5}-\d+|NPP|NCE|PED|GAIN|ODE)\b", text)),
+        "exclusivity_codes": set(re.findall(r"\b(?:[A-Z]{1,5}-\d+[A-Z0-9]*|NPP|NCE|PED|GAIN|ODE)\b", text)),
         "dates": {"-".join(d) for d in full_dates}
         | {pd.Timestamp(f"{m} {d} {y}").strftime("%Y-%m-%d") for m, d, y in month_dates},
         "years": set(re.findall(r"\b(?:19|20)\d\d\b", text)),
@@ -82,13 +83,43 @@ def type_mismatches(text: str, facts: dict) -> list[str]:
     return bad
 
 
+NEGATION = re.compile(r"\b(?:none|no|not|n/a)\b", re.I)
+
+
+def invented_exclusivity(text: str, brief: str) -> list[str]:
+    """Lines describing an exclusivity when the brief lists none.
+
+    Small models ignore "write no exclusivity bullet" and fill one in ("Exclusivity code: XA4T8J3RXC",
+    "Orphan drug exclusivity ... until 2031"). Only code-shaped tokens were caught before, so most
+    slipped through. Allowed: empty or negative bullets; the bottom line, carve-out and watch-for
+    sentences, where "exclusivity" is loose prose for protection; and the brief's own
+    180-day (Paragraph IV) exclusivity wording."""
+    if re.search(r"^Exclusivity ", brief, re.M):
+        return []
+    bad = []
+    for ln in text.splitlines():
+        low = ln.lower()
+        if "exclusivit" not in low or any(s in low for s in ("carve-out", "bottom line", "watch for")):
+            continue
+        if "180-day" in low and "180-day exclusivity" in brief:
+            continue
+        rest = re.sub(r"[*•+#_\s:.-]|exclusivit(?:y|ies)", "", low)
+        if not rest or NEGATION.search(low):
+            continue
+        bad.append(ln.strip())
+    return bad
+
+
 def check(text: str, facts: dict, brief: str, today: pd.Timestamp | None = None) -> dict:
     today = pd.Timestamp(today or pd.Timestamp.today().normalize())
     bad = unsupported(text, brief, today)
     bl = bottom_line_ok(text, facts)
     tm = type_mismatches(text, facts)
+    ie = invented_exclusivity(text, brief)
     issues = [f"not in brief: {k} {v}" for k, v in bad.items() if v]
     if bl is False:
         issues.append(f"bottom line does not state {facts.get('estimated_entry_all_listed')}")
     issues += tm
-    return {"pass": not issues, "issues": issues, "unsupported": bad, "bottom_line_ok": bl, "type_mismatches": tm}
+    issues += [f"exclusivity not in brief: {ln[:80]}" for ln in ie]
+    return {"pass": not issues, "issues": issues, "unsupported": bad, "bottom_line_ok": bl,
+            "type_mismatches": tm, "invented_exclusivity": ie}

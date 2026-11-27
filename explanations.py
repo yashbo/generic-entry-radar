@@ -5,7 +5,8 @@ Generate locally with Ollama:
 
 Each drug goes through the same pipeline as the app's Explain button (write, fact-check against
 the brief, one retry). Only answers that pass are stored, together with the brief they were
-checked against. At display time the app checks the stored answer again against today's data
+checked against. Drugs that fail are logged to `explanation_failures.json` with every attempt's
+issues and text. At display time the app checks the stored answer again against today's data
 (`current`), so an answer whose dates or numbers have gone stale is not shown.
 """
 from __future__ import annotations
@@ -27,6 +28,7 @@ import explain  # noqa: E402
 import grounding  # noqa: E402
 
 STORE = ROOT / "data" / "explanations.json"
+FAILURES = ROOT / "data" / "explanation_failures.json"  # why each failed drug failed, attempt by attempt
 
 
 def load(path: Path = STORE) -> dict[str, Any]:
@@ -80,6 +82,7 @@ def main() -> int:
     today = pd.Timestamp.today().normalize()
     ob, table = radar.build_table(orange_book.DEFAULT_DIR, today)
     store = load()
+    failures = load_failures()
     picks = pick(table, today, args.limit)
     stats = {"tried": 0, "passed": 0, "failed": 0, "kept": 0}
     t_start = time.time()
@@ -87,29 +90,45 @@ def main() -> int:
         facts = radar.full_facts(ob, table, appl_no)
         if not args.redo and current(store, facts, today)[0]:
             stats["kept"] += 1
+            failures.pop(appl_no, None)
             continue
         stats["tried"] += 1
         text, report = explain.explain_checked(facts)
-        status = "PASS" if not report["fallback"] else "FAIL " + "; ".join(report["issues"][:2])
-        print(f"[{i}/{len(picks)}] {facts['trade_name'][:30]:30s} {status}", flush=True)
+        print(f"[{i}/{len(picks)}] {facts['trade_name'][:30]:30s} {'FAIL' if report['fallback'] else 'PASS'}",
+              flush=True)
+        for h in report["history"]:
+            if h["issues"]:
+                print(f"    attempt {h['attempt']}: " + "; ".join(h["issues"]), flush=True)
         if report["fallback"]:
             stats["failed"] += 1
             store.pop(appl_no, None)  # never keep an answer that no longer matches
+            failures[appl_no] = {"trade_name": facts["trade_name"], "brief": explain.build_brief(facts),
+                                 "model": explain.MODEL, "generated": today.strftime("%Y-%m-%d"),
+                                 "attempts": report["history"]}
             continue
+        failures.pop(appl_no, None)
         stats["passed"] += 1
         store[appl_no] = {"trade_name": facts["trade_name"], "text": text, "brief": explain.build_brief(facts),
                           "model": explain.MODEL, "generated": today.strftime("%Y-%m-%d"),
                           "attempts": report["attempts"]}
         if i % 10 == 0:
-            _save(store, stats)
-    _save(store, stats)
+            _save(store, stats, failures)
+    _save(store, stats, failures)
     print(f"\n{stats}  in {time.time() - t_start:.0f}s; {len(store)} answers stored in {STORE}")
     return 0
 
 
-def _save(store: dict[str, Any], stats: dict[str, int]) -> None:
+def load_failures(path: Path = FAILURES) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8")).get("failures", {})
+
+
+def _save(store: dict[str, Any], stats: dict[str, int], failures: dict[str, Any]) -> None:
     STORE.write_text(json.dumps({"model": explain.MODEL, "stats": stats, "explanations": store},
                                 indent=1, ensure_ascii=False), encoding="utf-8")
+    FAILURES.write_text(json.dumps({"model": explain.MODEL, "failures": failures},
+                                   indent=1, ensure_ascii=False), encoding="utf-8")
 
 
 if __name__ == "__main__":

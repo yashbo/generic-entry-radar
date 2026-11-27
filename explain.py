@@ -24,6 +24,7 @@ HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2:3b")
 NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "4096"))  # briefs are short; larger spills off a 4 GB GPU
 DISCLAIMER = "_Estimate based on listed Orange Book data only; not legal advice._"
+NO_EXCLUSIVITY = "Exclusivities: none listed"
 MAX_NUMBERS = 3  # patent numbers quoted per barrier type
 
 SYSTEM = """You turn an analyst's brief about one drug into a short explanation for a business reader.
@@ -38,7 +39,7 @@ Format (markdown, under 200 words):
 **Bottom line:** one sentence using the brief's "Earliest generic entry" date.
 **Barriers:** exactly one bullet per "... patents:" line and per "Exclusivity" line in the brief, in the
 brief's order. Never one bullet per patent. Quote that line's patent numbers only in its own bullet.
-If the brief has no "Exclusivity" line, write no exclusivity bullet and mention no exclusivity codes.
+If the brief says "Exclusivities: none listed", write the bullet "Exclusivity: none listed" and mention no exclusivity codes.
 **Carve-out view:** one or two sentences using the brief's carve-out line.
 **Watch for:** one or two sentences using the brief's challenge, market and likelihood lines, if present."""
 
@@ -102,9 +103,12 @@ def build_brief(facts: dict[str, Any]) -> str:
             f"{kind}: {len(bases)} listed, the latest expiring {ps[0]['expires']} ({nums}){ped}"
             + (f"; these {meaning}." if meaning else ".")
         )
-    for e in facts.get("exclusivities", []):
-        if e.get("expires"):
-            lines.append(f"Exclusivity {e['exclusivity_code']} ({e['meaning']}) runs until {e['expires']}.")
+    excl = [e for e in facts.get("exclusivities", []) if e.get("expires")]
+    for e in excl:
+        lines.append(f"Exclusivity {e['exclusivity_code']} ({e['meaning']}) runs until {e['expires']}.")
+    if not excl:
+        # Said out loud: told only to omit the bullet, small models write one anyway and invent a code.
+        lines.append(f"{NO_EXCLUSIVITY}.")
 
     carve, full = facts.get("estimated_entry_with_carveout"), facts.get("estimated_entry_all_listed")
     if carve and carve != full:
@@ -224,20 +228,23 @@ def brief_as_markdown(facts: dict[str, Any]) -> str:
 def explain_checked(facts: dict[str, Any], attempts: int = 2) -> tuple[str, dict]:
     """Generate, verify against the brief, retry once, else fall back to the brief itself.
 
-    Returns (markdown, report) where report has pass/issues/attempts/fallback.
+    Returns (markdown, report) where report has pass/issues/attempts/fallback/history.
     """
     import grounding
 
     brief = build_brief(facts)
     report: dict = {}
+    history: list[dict] = []  # every attempt's issues and text, so a failure can be diagnosed later
     for i in range(1, attempts + 1):
         try:
             text = explain(facts)
         except GenerationTimeout as exc:
-            report = {"pass": False, "issues": [f"generation {exc}"], "attempts": i, "fallback": False}
-            continue
-        report = grounding.check(text, facts, brief)
-        report.update(attempts=i, fallback=False)
+            report = {"pass": False, "issues": [f"generation {exc}"]}
+            text = ""
+        else:
+            report = grounding.check(text, facts, brief)
+        history.append({"attempt": i, "issues": report["issues"], "text": text})
+        report.update(attempts=i, fallback=False, history=history)
         if report["pass"]:
             return text, report
     report["fallback"] = True

@@ -135,6 +135,28 @@ def test_the_drugs_own_nda_number_is_allowed():
     text = f"**Bottom line:** Generic entry for NDA {FACTS['appl_no']} is expected on 2033-08-15."
     r = grounding.check(text, FACTS, BRIEF, TODAY)
     assert r["pass"], r["issues"]
+def test_brief_says_when_no_exclusivity_is_listed():
+    facts = {**FACTS, "exclusivities": []}
+    assert explain.NO_EXCLUSIVITY in explain.build_brief(facts)
+
+
+def test_invented_exclusivity_is_caught_when_brief_has_none():
+    brief = explain.build_brief({**FACTS, "exclusivities": []})
+    for line in ["* Exclusivity code: XA4T8J3RXC", "• Exclusivity USP-0003A",
+                 "* Orphan drug exclusivity runs until 2031."]:
+        assert grounding.invented_exclusivity(line, brief) == [line], line
+    for line in ["* Exclusivity:", "* Exclusivity: none listed", "* Orphan drug exclusivity: Not applicable.",
+                 "**Carve-out view:** leaving off indication-specific exclusivities does not help."]:
+        assert grounding.invented_exclusivity(line, brief) == [], line
+
+
+def test_exclusivity_bullets_are_fine_when_the_brief_lists_one():
+    brief = BRIEF + "\nExclusivity ODE-428 (Orphan drug exclusivity) runs until 2030-03-16."
+    assert grounding.invented_exclusivity("* Exclusivity ODE-428 runs until 2030-03-16.", brief) == []
+
+
+def test_code_with_trailing_letters_is_caught():
+    assert grounding.unsupported("* Exclusivity USP-0003A", BRIEF, TODAY)["exclusivity_codes"] == ["USP-0003A"]
 
 
 def test_percentages_must_match_the_brief():
@@ -155,6 +177,20 @@ def test_month_and_year_only_bottom_line():
     assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected in August 2033.", FACTS) is True
     assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected in March 2031.", FACTS) is False
     assert grounding.bottom_line_ok("**Bottom line:** Generic entry is expected soon.", FACTS) is False
+
+
+def test_every_failed_attempt_is_recorded(monkeypatch=None):
+    answers = iter(["**Bottom line:** entry on 2031-03-01.", "* Exclusivity code EX-485 applies."])
+    real = explain.explain
+    explain.explain = lambda facts: next(answers)
+    try:
+        md, report = explain.explain_checked(FACTS)
+    finally:
+        explain.explain = real
+    assert report["fallback"] and [h["attempt"] for h in report["history"]] == [1, 2]
+    assert any("bottom line" in i for i in report["history"][0]["issues"])
+    assert any("EX-485" in i for i in report["history"][1]["issues"])
+    assert report["history"][1]["text"].startswith("* Exclusivity")
 
 
 def test_fallback_is_the_brief_plus_disclaimer():

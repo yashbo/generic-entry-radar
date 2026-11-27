@@ -1,5 +1,5 @@
 """Brief builder and grounding checks (no LLM needed).
-Run: python generic_entry_radar/tests/test_grounding.py"""
+Run: python tests/test_grounding.py"""
 import sys
 from pathlib import Path
 

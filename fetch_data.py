@@ -5,8 +5,8 @@ The zip contains tilde-delimited products.txt, patent.txt and exclusivity.txt.
 
 FDA's site often blocks scripted downloads, so the usual path is:
   1. Download the "Orange Book Data Files (compressed)" zip in your browser.
-  2. Put it in generic_entry_radar/data/ (any name ending in .zip), or pass --zip PATH.
-  3. Run: python generic_entry_radar/fetch_data.py
+  2. Put it in data/ (any name ending in .zip), or pass --zip PATH.
+  3. Run: python fetch_data.py
 """
 from __future__ import annotations
 

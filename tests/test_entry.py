@@ -1,5 +1,5 @@
-"""Tests on a synthetic Orange Book fixture. Run: python -m pytest generic_entry_radar/tests
-or simply: python generic_entry_radar/tests/test_entry.py"""
+"""Tests on a synthetic Orange Book fixture. Run: python -m pytest
+or simply: python tests/test_entry.py"""
 import sys
 from pathlib import Path
 

@@ -12,7 +12,7 @@ For each archived Orange Book edition (as-of date E):
 Caveats: ANDA approval is not commercial launch (settlements can delay launch), and
 ingredient names occasionally change between editions, so a few matches are missed.
 
-Run: python generic_entry_radar/backtest.py
+Run: python backtest.py
 """
 from __future__ import annotations
 

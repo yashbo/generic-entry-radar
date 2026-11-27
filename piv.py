@@ -51,6 +51,13 @@ def latest_file(piv_dir: Path = PIV_DIR) -> Path | None:
     return files[0] if files else None
 
 
+def list_date(piv_dir: Path = PIV_DIR) -> pd.Timestamp | None:
+    """Publication date of the newest list, from FDA's file name (e.g. "10-27-2026 Paragraph IV List")."""
+    path = latest_file(piv_dir)
+    m = re.match(r"(\d{1,2})-(\d{1,2})-(\d{4})", path.name) if path else None
+    return pd.Timestamp(int(m.group(3)), int(m.group(1)), int(m.group(2))) if m else None
+
+
 def load_rows(path: Path) -> pd.DataFrame:
     """One row per list entry (drug + dosage form + strength), with parsed dates and NDAs."""
     raw = pd.read_excel(path, header=None, dtype=object)

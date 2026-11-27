@@ -7,6 +7,7 @@ from typing import Any
 import pandas as pd
 
 import attractiveness
+import backtest
 import entry
 import orange_book
 import partd
@@ -24,9 +25,17 @@ def build_table(data_dir: Path, today: pd.Timestamp, with_model: bool = True):
     ob = orange_book.load(Path(data_dir))
     table = entry.build_entry_table(ob, today=today)
     bundle = attractiveness.load_model() if with_model and attractiveness.MODEL_PATH.exists() else None
+    # Score as of the data's own date, not the wall clock: otherwise the likelihood drifts a point or two
+    # every few weeks with no new data, and stored AI answers that quote it fail the display-time check.
+    edition = orange_book.edition_date(ob)
+    model_as_of = min(today, edition) if edition is not None else today
     if bundle:
         # Model estimate (0-100) that a generic arrives within 2 yrs of protection ending.
-        table["p_generic"] = table["appl_no"].map(attractiveness.score(bundle, ob, table, today) * 100).round(0)
+        # Features such as active patent counts also depend on the date, so score a table built as of then.
+        as_of_table = table if model_as_of == today else entry.build_entry_table(ob, today=model_as_of)
+        p = attractiveness.score(bundle, ob, as_of_table, model_as_of) * 100
+        in_cohort = table["status"].isin(backtest.COHORT)  # only drugs without a generic today are scored
+        table["p_generic"] = table["appl_no"].map(p).round(0).where(in_cohort)
     else:
         table["p_generic"] = float("nan")
     long = partd.load_long()
@@ -39,6 +48,11 @@ def build_table(data_dir: Path, today: pd.Timestamp, with_model: bool = True):
         for c in PIV_COLS:
             table[c] = None
     table.attrs["spend_year"] = partd.spend_year(long, today) if long is not None else None
+    # Stored as ISO strings: Streamlit serialises DataFrame attrs as JSON.
+    piv_date = piv.list_date()
+    table.attrs["edition_date"] = edition.strftime("%Y-%m-%d") if edition is not None else None
+    table.attrs["model_as_of"] = model_as_of.strftime("%Y-%m-%d")
+    table.attrs["piv_date"] = piv_date.strftime("%Y-%m-%d") if piv_date is not None else None
     return ob, table
 
 

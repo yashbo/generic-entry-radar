@@ -1,5 +1,5 @@
 """Paragraph IV list parsing and point-in-time features, on a generated mini spreadsheet.
-Run: python generic_entry_radar/tests/test_piv.py"""
+Run: python tests/test_piv.py"""
 import datetime as dt
 import sys
 import tempfile

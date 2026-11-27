@@ -1,5 +1,5 @@
 """Stored AI explanations are only shown while they still check out against today's facts.
-Run: python generic_entry_radar/tests/test_explanations.py"""
+Run: python tests/test_explanations.py"""
 import sys
 from pathlib import Path
 

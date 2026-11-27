@@ -1,5 +1,5 @@
 """Feature, label and scoring tests on the synthetic fixtures.
-Run: python generic_entry_radar/tests/test_attractiveness.py"""
+Run: python tests/test_attractiveness.py"""
 import sys
 import warnings
 from pathlib import Path

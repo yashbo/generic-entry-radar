@@ -10,7 +10,7 @@ Evaluation:
     restricted to drugs never seen in training
 Baselines: base rate, and a one-feature model ("molecule already has generics elsewhere").
 
-Run: python generic_entry_radar/attractiveness.py
+Run: python attractiveness.py
 """
 from __future__ import annotations
 

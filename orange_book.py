@@ -76,3 +76,13 @@ def load(data_dir: Path = DEFAULT_DIR) -> OrangeBook:
     exclusivity["exclusivity_date"] = _date(exclusivity["exclusivity_date"])
 
     return OrangeBook(products, patents, exclusivity)
+
+
+def edition_date(ob: OrangeBook) -> pd.Timestamp | None:
+    """Best estimate of when this edition was published: its most recent approval or patent submission.
+
+    The data files carry no edition date of their own. Scoring as of this date (not the wall clock)
+    keeps model numbers fixed until the data itself changes."""
+    dates = [ob.products["approval_date"].max(), ob.patents["submission_date"].max()]
+    dates = [d for d in dates if pd.notna(d)]
+    return max(dates).normalize() if dates else None

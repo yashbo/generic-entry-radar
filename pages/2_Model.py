@@ -24,7 +24,7 @@ st.caption(
 )
 
 if not attractiveness.METRICS_PATH.exists():
-    st.warning("No model yet. Run `python generic_entry_radar/attractiveness.py` (about 1 minute), then reload.")
+    st.warning("No model yet. Run `python attractiveness.py` (about 1 minute), then reload.")
     st.stop()
 
 m = json.loads(attractiveness.METRICS_PATH.read_text())

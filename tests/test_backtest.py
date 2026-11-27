@@ -1,5 +1,5 @@
 """Backtest tests: a synthetic old-format 2020 edition scored against the main fixture.
-Run: python generic_entry_radar/tests/test_backtest.py"""
+Run: python tests/test_backtest.py"""
 import sys
 from pathlib import Path
 

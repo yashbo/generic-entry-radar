@@ -21,22 +21,25 @@ Handled details: pediatric `*PED` extensions, delisted patents, discontinued pro
 
 ## Setup
 ```powershell
-pip install -r generic_entry_radar/requirements.txt
+git clone https://github.com/yashbo/generic-entry-radar
+cd generic-entry-radar
+pip install -r requirements.txt
 ```
+The repo already contains the data the hosted app uses (Orange Book, Paragraph IV list, Part D spend and the trained model), so `python -m streamlit run app.py` works straight away. To refresh the Orange Book:
 1. Download **Orange Book Data Files (compressed)** in your browser from
    https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files
-   (FDA blocks scripted downloads). Save the zip into `generic_entry_radar/data/`.
-2. `python generic_entry_radar/fetch_data.py` extracts it to `data/orange_book/`.
+   (FDA blocks scripted downloads). Save the zip into `data/`.
+2. `python fetch_data.py` extracts it to `data/orange_book/`.
 3. Optional LLM: install [Ollama](https://ollama.com) (`winget install Ollama.Ollama`), then `ollama pull llama3.2:3b` (default, fits a 4 GB GPU). With more memory, `ollama pull llama3.1:8b` and set `OLLAMA_MODEL=llama3.1:8b`.
    You can choose another model with the `OLLAMA_MODEL` env var.
-4. `python -m streamlit run generic_entry_radar/app.py`
+4. `python -m streamlit run app.py`
 
 Without real data the app runs on a synthetic demo fixture.
 
 ## Backtest
 ```powershell
-python generic_entry_radar/fetch_history.py   # 7 archived editions (2010-2022) from web.archive.org, ~4.5 MB
-python generic_entry_radar/backtest.py        # writes data/backtest/*.csv
+python fetch_history.py   # 7 archived editions (2010-2022) from web.archive.org, ~4.5 MB
+python backtest.py        # writes data/backtest/*.csv
 ```
 The dashboard also has a **Backtest** page.
 
@@ -54,15 +57,15 @@ The dashboard also has a **Backtest** page.
 **Caveats.** ANDA approval is not the same as launch. Ingredient names that change between editions cause 1.5–4.3% of mismatches, which are excluded from the error stats.
 
 ## Paragraph IV patent challenges
-FDA's [Paragraph IV list](https://www.fda.gov/drugs/abbreviated-new-drug-application-anda/patent-certifications-and-suitability-petitions) records every drug where a generic maker has certified that a listed patent is invalid or not infringed. It has 1,650 entries going back to 2004, with the challenged NDA number, first filing date, number of challengers, 180-day exclusivity status and the first challenger's approval and launch dates. fda.gov blocks scripts, so download the Excel file ("Download New Paragraph IV List Excel Spreadsheet") in a browser and save it into `generic_entry_radar/data/piv/`. `piv.py` picks up the newest file.
+FDA's [Paragraph IV list](https://www.fda.gov/drugs/abbreviated-new-drug-application-anda/patent-certifications-and-suitability-petitions) records every drug where a generic maker has certified that a listed patent is invalid or not infringed. It has 1,650 entries going back to 2004, with the challenged NDA number, first filing date, number of challengers, 180-day exclusivity status and the first challenger's approval and launch dates. fda.gov blocks scripts, so download the Excel file ("Download New Paragraph IV List Excel Spreadsheet") in a browser and save it into `data/piv/`. `piv.py` picks up the newest file.
 
 - **In the dashboard:** a "PIV filed" and "PIV challengers" column, a filter for challenged drugs, a challenge panel and timeline marker in the drug deep dive, and the challenge facts passed to the AI explainer.
 - **Current picture:** 246 of the 771 protected drugs already face a challenge (Oct 2026 list). 76% of drugs with "Generic approved, patents still listed" have one, which is how those approvals happen.
 - **Parsing:** "Pre-MMA" filings (before Dec 2003) get 8 Dec 2003 as an upper-bound date. 66 old entries with no NDA number (e.g. Pepcid, Tequin) can't be matched.
 
 ```powershell
-python generic_entry_radar/fetch_partd.py      # Medicare Part D spending 2011-2024, ~17 MB (archived CMS files)
-python generic_entry_radar/attractiveness.py   # about 1.5 minutes; writes data/model/
+python fetch_partd.py      # Medicare Part D spending 2011-2024, ~17 MB (archived CMS files)
+python attractiveness.py   # about 1.5 minutes; writes data/model/
 ```
 The model answers the question the backtest raised: **will a generic come at all?** Its label is whether a generic was approved no later than 2 years after a drug's listed protection ended. It's trained on 2,378 matured backtest cases covering 929 drugs; 42% of them got a generic. Features are **point-in-time**: each comes only from the edition the prediction was made from. They include dosage form and route, modified release, combination product, strengths, drug age, years to entry, patent counts and barrier type, orphan and NCE flags, generics of the same molecule in other forms, **Paragraph IV challenges** filed before the edition date (counts and outcomes are excluded because they would leak the future), and **Medicare Part D sales** (brand and whole-molecule spend in the last full year before the edition).
 
@@ -97,7 +100,7 @@ Small local models misread raw JSON: in early tests llama3.2:3b put the carve-ou
 Generation is capped at 450 tokens and 90 seconds. Without a cap, the model once fell into a repetition loop that Ollama never stopped.
 
 ```powershell
-python generic_entry_radar/eval_explainer.py --n 12
+python eval_explainer.py --n 12
 ```
 **Latest runs (same 12 drugs, 4 GB RTX 3050 laptop GPU):**
 
@@ -114,30 +117,29 @@ The model comparison also improved the pipeline. On the first 8B run, a muddled 
 The hosted app has no LLM, so the AI answers for about 300 drugs are written in advance on a laptop:
 
 ```powershell
-python generic_entry_radar/explanations.py --limit 300
+python explanations.py --limit 300
 ```
 
 - **Which drugs:** protected drugs whose listed protection ends within 5 years, then drugs where a carve-out is possible now, then the biggest Medicare Part D spend, then Paragraph IV challenges.
 - **Same pipeline as the Explain button:** write, fact-check, one retry. Only answers that pass are kept in `data/explanations.json`, together with the brief each was checked against.
-- **Latest batch:** 289 of 300 drugs have a stored answer that passes the current fact check (including the invented-exclusivity check); the other 11 failed twice and show the brief. Why each failed, attempt by attempt, is in `data/explanation_failures.json`. Most are invented patent numbers such as `US 10,439,111`.
+- **Latest batch:** 289 of 300 drugs have a stored answer that passes the current fact check (including the invented-exclusivity check); the other 11 failed twice and show the brief. Why each failed, attempt by attempt, is in `data/explanation_failures.json`. Most are invented patent numbers such as `US 10,439,111`. Moving the likelihood score to the data's own date shifted it by a point for 7 drugs, so 282 show until the next run regenerates those 7 along with the 11.
 - **Checked again at display time:** the app reruns the fact check against today's data and also requires the drug's status to be unchanged. A stored answer whose dates, numbers or status have gone stale is not shown; the verified brief appears instead.
+- **Stable until the data changes:** the generic-likelihood percentage is scored as of the data's own date (the latest approval or patent submission in the Orange Book files), not the wall clock. Before this, the model's "years to entry" and active-patent features moved every day, the percentage drifted a point or two, and stored answers quoting it failed the display-time check: of 289, only 180 would still have shown a year later. Now an answer is hidden only when the drug's status really changes or the data is refreshed.
+- **Retrying with a bigger model:** `python explanations.py --model llama3.1:8b` writes answers for every picked drug without a current one (the failures plus any that went stale) and keeps the rest. `--only-failed` limits it to the drugs logged in `explanation_failures.json`. Each stored answer records the model that wrote it, and the app names it.
 
 ## Tests
 ```powershell
-python generic_entry_radar/tests/test_entry.py
-python generic_entry_radar/tests/test_backtest.py
-python generic_entry_radar/tests/test_attractiveness.py
-python generic_entry_radar/tests/test_piv.py
-python generic_entry_radar/tests/test_grounding.py
-python generic_entry_radar/tests/test_explanations.py
+pip install pytest
+python -m pytest -q
 ```
+GitHub Actions runs the same suite on every push to `main` and every pull request (`.github/workflows/tests.yml`). Each test file also runs on its own, e.g. `python tests/test_entry.py`.
 
 ## Files
 - `fetch_data.py`: gets and extracts the Orange Book zip
 - `orange_book.py`: loads and cleans the three tilde-delimited files
 - `entry.py`: estimation logic and per-drug fact sheet
 - `explain.py`: Ollama explainer, grounded only on the fact sheet
-- `app.py`: Streamlit dashboard (protection-cliff chart, filterable table, drug deep dive)
+- `app.py`: Streamlit dashboard (data-as-of line, protection-cliff chart, filterable table with an "AI answer" column and filter, drug deep dive with shareable `?nda=` links)
 - `fetch_history.py`, `backtest.py`, `pages/1_Backtest.py`: archived editions and backtest
 - `features.py`, `attractiveness.py`, `pages/2_Model.py`: point-in-time features and the attractiveness model
 - `fetch_partd.py`, `partd.py`: Medicare Part D spending and its matching to Orange Book drugs

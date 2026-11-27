@@ -1,7 +1,7 @@
 """Pre-written, fact-checked AI explanations for the hosted app (which has no LLM).
 
 Generate locally with Ollama:
-    python generic_entry_radar/explanations.py --limit 300
+    python explanations.py --limit 300
 
 Each drug goes through the same pipeline as the app's Explain button (write, fact-check against
 the brief, one retry). Only answers that pass are stored, together with the brief they were
@@ -53,6 +53,13 @@ def current(store: dict[str, Any], facts: dict[str, Any], today: pd.Timestamp | 
     return (e if report["pass"] else None), report
 
 
+def verified(store: dict[str, Any], ob, table: pd.DataFrame, today: pd.Timestamp | None = None) -> set[str]:
+    """NDAs whose stored answer still passes the fact check on today's data (what the app will show)."""
+    import radar
+    present = set(table["appl_no"])
+    return {a for a in store if a in present and current(store, radar.full_facts(ob, table, a), today)[0]}
+
+
 def pick(table: pd.DataFrame, today: pd.Timestamp, limit: int) -> list[str]:
     """Most useful drugs first: protection ending soon, carve-out now, big Medicare spend, PIV challenge."""
     prot = table[table["status"] == "Protected"]
@@ -70,7 +77,12 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=300)
     ap.add_argument("--redo", action="store_true", help="Regenerate drugs that already have a stored answer")
+    ap.add_argument("--model", help=f"Ollama model to write with (default {explain.MODEL}, or OLLAMA_MODEL)")
+    ap.add_argument("--only-failed", action="store_true",
+                    help="Only retry drugs logged in explanation_failures.json (e.g. with a bigger --model)")
     args = ap.parse_args()
+    if args.model:
+        explain.MODEL = args.model
 
     import orange_book
     import radar
@@ -84,6 +96,9 @@ def main() -> int:
     store = load()
     failures = load_failures()
     picks = pick(table, today, args.limit)
+    if args.only_failed:
+        picks = [a for a in failures if a in set(table["appl_no"])]
+        print(f"Retrying {len(picks)} failed drugs with {explain.MODEL}")
     stats = {"tried": 0, "passed": 0, "failed": 0, "kept": 0}
     t_start = time.time()
     for i, appl_no in enumerate(picks, 1):
@@ -125,7 +140,8 @@ def load_failures(path: Path = FAILURES) -> dict[str, Any]:
 
 
 def _save(store: dict[str, Any], stats: dict[str, int], failures: dict[str, Any]) -> None:
-    STORE.write_text(json.dumps({"model": explain.MODEL, "stats": stats, "explanations": store},
+    models = sorted({e.get("model", "") for e in store.values()} - {""})
+    STORE.write_text(json.dumps({"model": ", ".join(models) or explain.MODEL, "stats": stats, "explanations": store},
                                 indent=1, ensure_ascii=False), encoding="utf-8")
     FAILURES.write_text(json.dumps({"model": explain.MODEL, "failures": failures},
                                    indent=1, ensure_ascii=False), encoding="utf-8")

@@ -1,7 +1,7 @@
 """Generic Entry Radar: Streamlit dashboard.
 
 Run from the project folder:
-    python -m streamlit run generic_entry_radar/app.py
+    python -m streamlit run app.py
 """
 from __future__ import annotations
 
@@ -47,6 +47,13 @@ def load_explanations(mtime: float = 0.0):
     return explanations.load()
 
 
+@st.cache_data(show_spinner="Checking stored AI answers ...")
+def verified_answers(data_dir: str, model_mtime: float, store_mtime: float) -> set[str]:
+    """NDAs whose stored AI answer still passes the fact check today, i.e. the ones the deep dive will show."""
+    ob, table = load(data_dir, model_mtime)
+    return explanations.verified(load_explanations(store_mtime), ob, table, TODAY)
+
+
 # ---------------------------------------------------------------- data source
 if (REAL_DIR / "products.txt").exists():
     data_dir, demo = REAL_DIR, False
@@ -54,8 +61,12 @@ else:
     data_dir, demo = DEMO_DIR, True
 
 model_path = attractiveness.MODEL_PATH
-ob, table = load(str(data_dir), model_path.stat().st_mtime if model_path.exists() else 0.0)
+model_mtime = model_path.stat().st_mtime if model_path.exists() else 0.0
+ob, table = load(str(data_dir), model_mtime)
 has_model = table["p_generic"].notna().any()
+store_mtime = explanations.STORE.stat().st_mtime if explanations.STORE.exists() else 0.0
+with_ai = verified_answers(str(data_dir), model_mtime, store_mtime)
+table = table.assign(ai_answer=table["appl_no"].isin(with_ai))
 
 st.title("📡 Generic Entry Radar")
 st.caption(
@@ -66,8 +77,25 @@ if demo:
     st.warning(
         "Showing **synthetic demo data**. Download the Orange Book zip from "
         "[FDA](https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files), "
-        "save it in `generic_entry_radar/data/`, run `python generic_entry_radar/fetch_data.py`, then rerun the app."
+        "save it in `data/`, run `python fetch_data.py`, then rerun the app."
     )
+
+
+def _fmt(d) -> str | None:
+    return pd.Timestamp(d).strftime("%d %b %Y").lstrip("0") if d is not None and pd.notna(d) else None
+
+
+sources = []
+if _fmt(table.attrs.get("edition_date")):
+    sources.append(f"Orange Book with records through {_fmt(table.attrs['edition_date'])}")
+if _fmt(table.attrs.get("piv_date")):
+    sources.append(f"Paragraph IV list of {_fmt(table.attrs['piv_date'])}")
+if table.attrs.get("spend_year"):
+    sources.append(f"Medicare Part D spend for {table.attrs['spend_year']}")
+if sources:
+    st.caption("🗓️ Data as of: " + " · ".join(sources) + f". Dates and statuses are computed for today, {_fmt(TODAY)}"
+               + (f"; generic likelihood is scored as of {_fmt(table.attrs['model_as_of'])}, the data's own date."
+                  if has_model and table.attrs.get("model_as_of") is not None else "."))
 
 # ---------------------------------------------------------------- filters
 with st.sidebar:
@@ -82,6 +110,8 @@ with st.sidebar:
     min_p = st.slider("Min. generic likelihood (%)", 0, 100, 0, disabled=not has_model,
                       help="Model estimate that a generic is approved within 2 years of protection ending. "
                            "Only drugs without a generic are scored.")
+    only_ai = st.checkbox(f"Only drugs with an AI answer ({len(with_ai):,})",
+                          help="A pre-written AI explanation that passes today's fact check.")
     st.divider()
     ok, msg = explain.available()
     st.caption(("🟢 LLM explainer: " + msg) if ok else
@@ -99,6 +129,8 @@ if has_model and min_p > 0:
     view = view[view["p_generic"] >= min_p]
 if only_piv:
     view = view[view["piv_first_date"].notna()]
+if only_ai:
+    view = view[view["ai_answer"]]
 
 # ---------------------------------------------------------------- KPIs
 protected = table[table["status"] == "Protected"]
@@ -109,7 +141,7 @@ c2.metric("Protected", f"{len(protected):,}")
 c3.metric("Ends ≤ 3 yrs", f"{len(soon):,}")
 c4.metric("…generic likely", f"{(soon['p_generic'] >= 50).sum():,}" if has_model else "n/a",
           help="Of those, how many the model gives ≥ 50% chance of a generic within 2 years. "
-               "Train it with: python generic_entry_radar/attractiveness.py")
+               "Train it with: python attractiveness.py")
 c5.metric("Open, no generic", f"{(table['status'] == 'Open: no listed barrier, no generic').sum():,}")
 n_challenged = protected["piv_first_date"].notna().sum()
 if n_challenged:
@@ -136,7 +168,7 @@ else:
 st.subheader(f"Drugs ({len(view):,})")
 cols = {
     "trade_name": "Trade name", "ingredient": "Ingredient", "df_route": "Form; route", "applicant": "Applicant",
-    "status": "Status", "main_barrier": "Last barrier", "entry_all_listed": "Entry (all listed)",
+    "status": "Status", "ai_answer": "AI answer", "main_barrier": "Last barrier", "entry_all_listed": "Entry (all listed)",
     "entry_with_carveout": "Entry (carve-out)", "years_to_entry": "Years", "p_generic": "Generic likelihood",
     "partd_spend_m": "Part D spend ($M)", "piv_first_date": "PIV filed", "piv_max_andas": "PIV challengers",
     "n_active_patents": "Active patents",
@@ -150,6 +182,7 @@ st.dataframe(
         "Entry (carve-out)": st.column_config.DateColumn(format="YYYY-MM-DD"),
         "PIV filed": st.column_config.DateColumn(format="YYYY-MM-DD", help="First Paragraph IV patent challenge"),
         "Generic likelihood": st.column_config.ProgressColumn(format="%.0f%%", min_value=0, max_value=100),
+        "AI answer": st.column_config.CheckboxColumn(help="Pre-written AI explanation that passes today's fact check"),
         "Part D spend ($M)": st.column_config.NumberColumn(format="%.1f",
             help=f"Medicare Part D gross spend on this brand in {table.attrs.get('spend_year')}"),
     },
@@ -158,11 +191,21 @@ st.download_button("Download CSV", view[list(cols)].rename(columns=cols).to_csv(
 
 # ---------------------------------------------------------------- drug detail
 st.subheader("Drug deep dive")
-if view.empty:
+# A shared link (?nda=021234) opens that drug even if the current filters hide it.
+linked = str(st.query_params.get("nda", "")).strip().zfill(6)
+choices = view
+if linked in set(table["appl_no"]) and linked not in set(view["appl_no"]):
+    choices = pd.concat([table[table["appl_no"] == linked], view])
+if choices.empty:
     st.stop()
-labels = (view["trade_name"] + " — " + view["ingredient"] + " (NDA " + view["appl_no"] + ")").tolist()
-pick = st.selectbox("Choose a drug", labels)
-appl_no = view["appl_no"].iloc[labels.index(pick)]
+labels = (choices["trade_name"] + " — " + choices["ingredient"] + " (NDA " + choices["appl_no"] + ")"
+          + choices["ai_answer"].map({True: " · AI answer", False: ""})).tolist()
+nda_list = choices["appl_no"].tolist()
+pick = st.selectbox("Choose a drug", labels, index=nda_list.index(linked) if linked in nda_list else 0)
+appl_no = nda_list[labels.index(pick)]
+if st.query_params.get("nda") != appl_no:
+    st.query_params["nda"] = appl_no
+st.caption(f"🔗 Link to this drug: add `?nda={appl_no}` to the site address, or copy it from the address bar.")
 facts = radar.full_facts(ob, table, appl_no)
 prow = table.loc[table["appl_no"] == appl_no].iloc[0]
 p_gen, spend_m = prow["p_generic"], prow["partd_spend_m"]
@@ -219,8 +262,7 @@ with st.expander("Products and raw facts sent to the LLM"):
     st.json(facts)
 
 st.markdown("#### AI explanation")
-_store_mtime = explanations.STORE.stat().st_mtime if explanations.STORE.exists() else 0.0
-stored, _ = explanations.current(load_explanations(_store_mtime), facts, TODAY)
+stored, _ = explanations.current(load_explanations(store_mtime), facts, TODAY)
 if stored:
     # Written offline by the local model; checked when written and checked again just now against today's data.
     st.caption(f"✅ Written by {stored['model']} on {stored['generated']} and fact-checked against the data, "

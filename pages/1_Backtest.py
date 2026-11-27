@@ -46,7 +46,7 @@ elif saved_rows.exists():
 else:
     st.warning(
         "No archived editions found. Run:\n\n"
-        "```\npython generic_entry_radar/fetch_history.py\n```\n"
+        "```\npython fetch_history.py\n```\n"
         "then reload this page."
     )
     st.stop()

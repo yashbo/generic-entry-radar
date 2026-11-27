@@ -4,7 +4,7 @@ For a sample of drugs, generate an explanation and flag every patent number,
 exclusivity code, full date or year that does NOT appear in the facts the model was given.
 Unsupported items are likely hallucinations.
 
-Run: python generic_entry_radar/eval_explainer.py [--n 8] [--model llama3.2:3b]
+Run: python eval_explainer.py [--n 8] [--model llama3.2:3b]
 """
 from __future__ import annotations
 
